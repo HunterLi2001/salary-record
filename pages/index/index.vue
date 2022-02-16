@@ -1,7 +1,7 @@
 <template>
 	<view class="indexPage">
 		<view class="header">
-			<view class="headLogo">SALSRY SHOW</view>
+			<view class="headLogo">SALARY SHOW</view>
 			<view class="headselect">
 				<view @click="enter">薪资查询</view>
 				<view @click="enterProfessional(0)">普通职业</view>
