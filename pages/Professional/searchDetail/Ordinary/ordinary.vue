@@ -86,7 +86,8 @@ export default {
 	components:{
 		searchItem
 	},
-	setup(){
+	setup(options){
+		const searchResult = reactive(options);
 		//tab 切换
 		const tabStatus = ref(1)
 		const changeTab =(target)=>{
@@ -183,6 +184,7 @@ export default {
 		
 		]
 		return {
+			searchResult,
 			popList,
 			open,
 			popup,

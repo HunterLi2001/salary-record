@@ -661,7 +661,8 @@
 			text-align: center;
 			font-family: "黑体";
 		}
-		.active{
+
+		.active {
 			color: red;
 		}
 	}
