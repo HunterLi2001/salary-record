@@ -2,3 +2,14 @@
 # yarn lockfile v1
 
 
+"@types/uni-app@^1.4.4":
+  "integrity" "sha512-ZTXnrCTblZyoLIoKbTv1Whz1nxrTcM7vg0qGXzDpXP8m9MqdjKt48N3FffQT1IsJWNkxbvJ1Eg5UHDaq+k+oBQ=="
+  "resolved" "https://registry.npmmirror.com/@types/uni-app/-/uni-app-1.4.4.tgz"
+  "version" "1.4.4"
+  dependencies:
+    "vue" "^2.6.8"
+
+"vue@^2.6.8":
+  "integrity" "sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ=="
+  "resolved" "https://registry.npmmirror.com/vue/-/vue-2.6.14.tgz"
+  "version" "2.6.14"

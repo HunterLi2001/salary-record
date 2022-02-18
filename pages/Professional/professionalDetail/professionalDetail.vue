@@ -2,10 +2,10 @@
 	<view class="professionDetail">
 		<view class="top_list">
 			<view class="pos_name">{{data.pos_name}}</view>
-			<view class="salary">{{data.salary}}/月</view>
+			<view class="salary">{{data.pos_salary}}/月</view>
 		</view>
 		<view class="center_pos_list">
-			<view class="address">{{data.address}}</view>
+			<view class="address">{{data.com_address}}</view>
 			<view class="education">{{data.education}}</view>
 			<view class="pos_type">{{data.pos_type}}</view>
 		</view>
@@ -15,11 +15,11 @@
 			</view>
 			<view class="com_right">
 				<view class="center_time_list">
-					<view class="address">发布时间：{{data.send_time}}</view>
+					<view class="address">发布时间：{{data.release_time}}</view>
 				</view>
 				<view class="center_more_list">
-					<view class="read_count">浏览量：{{data.read_count}}</view>
-					<view class="praise_count">点赞量：{{data.praise_count}}</view>
+					<view class="read_count">浏览量：{{1}}</view>
+					<view class="praise_count">点赞量：{{data.quantity}}</view>
 				</view>
 			</view>
 		</view>
@@ -41,18 +41,11 @@ import {ref,reactive} from 'vue'
 export default {
 	components:{
 	},
-	setup(){
-		const data={
-			salary:100000,
-			com_name:"腾讯",
-			pos_name:"开发工程师",
-			address:"重庆商家来说地方开始的地方",
-			pos_type:"开发",
-			education:"研究生",
-			send_time:'2020-01-01',
-			read_count:8938,
-			praise_count:8080,
-		}
+	// TODO 在h5端调试时，options为传递过来的对象，而在微信小程序中为 Proxy{}。
+	setup(options){
+		console.log(options)
+		const data=reactive(options);
+		console.log(data)
 		return {
 			data
 		}

@@ -15,7 +15,7 @@
 					<uni-collapse-item title-border="none" :border="false" :show-arrow="false" :open="showCollapse">
 						<template v-slot:title>
 							<uni-easyinput v-model="company" placeholder="输入公司名称" @blur="closeCollapse"
-								@focus="openCollapse" @keyup="quickShowInputCompany">
+								@focus="openCollapse" @keyup="quickShowInputCompany(company.trim(),companyList,3)">
 							</uni-easyinput>
 						</template>
 						<view class="content">
@@ -114,45 +114,16 @@
 		<!-- TODO ui需要进行优化 -->
 		<uni-popup ref="education_popup" type="bottom" background-color="#fff">
 			<view class="pop_list">
-				<view @click="changeEducation('其他')">其他</view>
-				<view @click="changeEducation('博士985')">博士985</view>
-				<view @click="changeEducation('博士211')">博士211</view>
-				<view @click="changeEducation('博士海归')">博士海归</view>
-				<view @click="changeEducation('博士其他')">博士其他</view>
-				<view @click="changeEducation('硕士985')">硕士985</view>
-				<view @click="changeEducation('硕士211')">硕士211</view>
-				<view @click="changeEducation('硕士海归')">硕士海归</view>
-				<view @click="changeEducation('硕士其他')">硕士其他</view>
-				<view @click="changeEducation('本科985')">本科985</view>
-				<view @click="changeEducation('本科211')">本科211</view>
-				<view @click="changeEducation('本科海归')">本科海归</view>
-				<view @click="changeEducation('本科其他')">本科其他</view>
-				<view @click="changeEducation('大专')">大专</view>
+				<view @click="changeEducation(item)" v-for="item in eduList" :key="item">{{item}}</view>
 			</view>
 		</uni-popup>
 
 		<uni-popup ref="industry_popup" type="bottom" background-color="#fff">
 			<view class="pop_list" v-if="tabStatus===1">
-				<view @click="changeIndustry('IT|通信|互联网')">IT|通信|互联网</view>
-				<view @click="changeIndustry('金融')">金融</view>
-				<view @click="changeIndustry('销售|客服|市场')">销售|客服|市场</view>
-				<view @click="changeIndustry('财务|人力资源|行政')">财务|人力资源|行政</view>
-				<view @click="changeIndustry('项目质量|高级管理')">项目质量|高级管理</view>
-				<view @click="changeIndustry('房产|建筑|物业管理')">房产|建筑|物业管理</view>
-				<view @click="changeIndustry('采购|交通|贸易|物流')">采购|交通|贸易|物流</view>
-				<view @click="changeIndustry('生产|制造')">生产|制造</view>
-				<view @click="changeIndustry('传媒|艺术|设计|印刷')">传媒|艺术|设计|印刷</view>
-				<view @click="changeIndustry('咨询|法律|教育|翻译')">咨询|法律|教育|翻译</view>
-				<view @click="changeIndustry('服务业')">服务业</view>
-				<view @click="changeIndustry('能源环保|农业科研')">能源环保|农业科研</view>
-				<view @click="changeIndustry('其他行业')">其他行业</view>
-				<view @click="changeIndustry('兼职|实习|社工其它')">兼职|实习|社工其它</view>
+				<view @click="changeIndustry(item)" v-for="(item,index) in induList[0]" :key="index">{{item}}</view>
 			</view>
 			<view class="pop_list" v-if="tabStatus===2">
-				<view @click="changeIndustry('网络主播|视频拍摄|博主')">网络主播|视频拍摄|博主</view>
-				<view @click="changeIndustry('外卖|闪送')">外卖|闪送</view>
-				<view @click="changeIndustry('代驾|网约车')">代驾|网约车</view>
-				<view @click="changeIndustry('其他行业')">其他行业</view>
+				<view @click="changeIndustry(item)" v-for="(item,index) in induList[1]" :key="index">{{item}}</view>
 			</view>
 		</uni-popup>
 
@@ -160,13 +131,11 @@
 </template>
 
 <script>
-	import {
-		ref,
-		reactive
-	} from 'vue';
-	import {
-		dropdownMenuSelection
-	} from "../utils/utils.js";
+	import {ref,reactive} from 'vue';
+	import {dropdownMenuSelection,checkStrContain} from "../utils/utils.js";
+	import edu_list from "../../static/json/edu_list.json";
+	import indu_list from "../../static/json/indu_list.json";
+	import company_list from "../../static/json/company_list.json";
 	export default {
 		setup() {
 			//切换tab
@@ -189,111 +158,30 @@
 						b. h5端输入公司名称时提示信息会变化，但是提示条的大小随着alternativeCompany初始长度而变化，且之后不会再改变。
 			*/
 			// const alternativeCompany = reactive(["1","2","3"]);
-			const alternativeCompany = reactive([]);
-
-			function quickShowInputCompany() {
-				console.log(company.value);
-				alternativeCompany.splice(0, alternativeCompany.length);
-				// TODO 代码可以有优化
-				switch (company.value) {
-					case "阿":
-					case "阿里":
-						alternativeCompany.push("阿里巴巴");
-						break;
-					case "腾":
-					case "腾讯":
-						alternativeCompany.push("腾讯");
-						break;
-					case "华":
-						alternativeCompany.push("华为", "华硕");
-						break;
-					case "大":
-						alternativeCompany.push("大疆", "大华");
-						break;
-					case "移":
-					case "移动":
-						alternativeCompany.push("移动");
-						break;
-					case "富":
-					case "富士":
-						alternativeCompany.push("富士康");
-						break;
-					case "科":
-					case "科大":
-						alternativeCompany.push("科大讯飞");
-						break;
-					case "中":
-						alternativeCompany.push("中兴", "中原电子", "中芯国际");
-						break;
-					case "小":
-						alternativeCompany.push("小米");
-						break;
-					case "字":
-					case "字节":
-						alternativeCompany.push("字节跳动");
-						break;
-					case "滴":
-					case "滴滴":
-						alternativeCompany.push("滴滴");
-						break;
-					case "中原":
-						alternativeCompany.push("中原电子");
-						break;
-					case "长":
-					case "长江":
-						alternativeCompany.push("长江储存");
-						break;
-					case "海":
-					case "海康":
-						alternativeCompany.push("海康威视");
-						break;
-					case "美":
-						alternativeCompany.push("美团", "美的");
-						break;
-					case "汇":
-						alternativeCompany.push("汇川");
-						break;
-					case "荣":
-						alternativeCompany.push("荣耀");
-						break;
-					case "百":
-						alternativeCompany.push("百度");
-						break;
-					case "京":
-						alternativeCompany.push("京东");
-						break;
-					case "联":
-						alternativeCompany.push("联影", "联想");
-						break;
-					case "携":
-						alternativeCompany.push("携程");
-						break;
-					case "网":
-						alternativeCompany.push("网易");
-						break;
-					case "鸿":
-						alternativeCompany.push("鸿海精密");
-						break;
-					case "联":
-						alternativeCompany.push("联想");
-						break;
-					case "拼":
-					case "拼多":
-						alternativeCompany.push("拼多多");
-						break;
-					case "搜":
-						alternativeCompany.push("搜狐");
-						break;
-					case "新":
-						alternativeCompany.push("新浪");
-						break;
+			// const alternativeCompany = reactive([]);
+			const companyList = company_list;
+			
+			// TODO 在调用quickShowInputCompany 时，companyList会莫名奇妙出现undefined的问题。 
+			const alternativeCompany = reactive(quickShowInputCompany(company.value.trim(),companyList,3));
+			// const alternativeCompany = reactive([]);
+			function quickShowInputCompany(name,array,length) {
+				console.log(array)
+				if(array.length < 1){
+				    return;
 				}
+				let result = [];
+				for (let key in array) {
+					if (checkStrContain(array[key].name,name) && result.length < length) {
+						result.push(array[key])
+					}
+				}
+				return result;
 			}
 			//岗位
 			const job = ref('')
 			//城市
 			const city = ref('')
-			const city_list = [{
+			const city_list = reactive([{
 					id: 1,
 					label: "上海"
 				},
@@ -309,7 +197,7 @@
 					id: 4,
 					label: "成都"
 				},
-			]
+			])
 
 			function selectHotCity(cityId) {
 				for (let key in city_list) {
@@ -319,9 +207,6 @@
 				}
 			}
 
-			/* TODO 存在问题：当点击X按钮时并没有直接删除按钮，但是在点击输入框且有键盘操作后才有页面上删除操作。
-			（实际上点击X后数组元素已经删除，但没有进行渲染）
-			*/
 			function closeCity(cityId) {
 				for (let key in city_list) {
 					if (city_list[key].id === cityId) {
@@ -355,6 +240,7 @@
 			const education_popOpen = () => {
 				education_popup.value.open('bottom')
 			}
+			const eduList = reactive(edu_list);
 
 			function changeEducation(edu) {
 				dropdownMenuSelection(education_popup, sel_education, edu)
@@ -362,6 +248,7 @@
 			//行业
 			const sel_industry = ref("请选择行业")
 			const industry_popup = ref(null)
+			const induList = reactive(indu_list);
 			const industry_popOpen = () => {
 				industry_popup.value.open('bottom')
 			}
@@ -401,13 +288,14 @@
 								company: company.value,
 								job: job.value,
 								city: city.value,
-								salary: salary.value,
+								salary: salary.value, 
 								type: tabStatus.value === 1 ? selType.value : 0, //0为选择新兴职业时的类型代码
 								education: sel_education.value,
 								industry: sel_industry.value,
 								jobNote: job_note.value
 							}
 							console.log(obj);
+							//进入后端代码
 						} else if (res.cancel) {
 							return;
 						}
@@ -444,7 +332,9 @@
 				changeEducation,
 				changeIndustry,
 				submit,
-				showDetail
+				showDetail,
+				eduList,
+				induList
 			}
 		}
 	}

@@ -4,14 +4,14 @@
 				<view class="header_logo">普通职业</view>			
 		</view>
 		<view class="content_search">
-				<uni-easyinput v-model="value" placeholder="请输入公司名称/城市/岗位" prefixIcon="search"></uni-easyinput>
+				<uni-easyinput v-model="inputValue" placeholder="请输入公司名称/城市/岗位" @iconClick="search()" prefixIcon="search"></uni-easyinput>
 		</view>
 		<view class="content_more">
 			<view class="more_list">
 				<view class="label">类型</view>
 				<view class="list_scroll">
 					<view class="sel_list">
-						<view class="sel_item" v-for="item in moreList.data" :key="item.id">{{item.name}}</view>
+						<view class="sel_item" v-for="item in moreList1.data" :key="item.id" @click="selectHotOptions(moreList1,item.id)">{{item.name}}</view>
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -21,7 +21,7 @@
 				<view class="list_scroll">
 					<view class="sel_list">
 						<view class="sel_item" :class="sel_item"
-						v-for="item in moreList.data" :key="item.id">{{item.name}}</view>
+						v-for="item in moreList2.data" :key="item.id" @click="selectHotOptions(moreList2,item.id)">{{item.name}}</view>
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -30,7 +30,7 @@
 				<view class="label">行业</view>
 				<view class="list_scroll">
 					<view class="sel_list">
-						<view class="sel_item" v-for="item in moreList.data" :key="item.id">{{item.name}}</view>
+						<view class="sel_item" v-for="item in moreList3.data" :key="item.id" @click="selectHotOptions(moreList3,item.id)">{{item.name}}</view>
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -42,8 +42,8 @@
 					<view class="sel_item" :class="{seled_item:tabTarget===2}" @click="changeTabTarget(2)">按点赞数排序</view>
 					<view class="sel_item" :class="{seled_item:tabTarget===3}" @click="changeTabTarget(3)">按可信度排序</view>
 				</view>
-				<view v-for="item in 10" :key="item"  class="searchItem">
-					<searchItem :detail="detail"></searchItem>
+				<view v-for="item in detail" :key="item"  class="searchItem">
+					<searchItem :detail="item"></searchItem>
 				</view>
 			</view>
 		</view>
@@ -80,19 +80,23 @@
 </template>
 
 <script>
-import {ref,reactive} from 'vue'
+import {ref,reactive,toRaw} from 'vue'
 import searchItem from "../../common/searchItem.vue"
+import pop_list from "../../../../static/json/pop_list.json";
 export default {
 	components:{
 		searchItem
 	},
 	setup(options){
+		// TODO 在加载页面时开始搜索操作，同时将传递来的参数放入inputValue中进行显示.
 		const searchResult = reactive(options);
 		//tab 切换
 		const tabStatus = ref(1)
 		const changeTab =(target)=>{
 			tabStatus.value=target
 		}
+		//输入框
+		const inputValue = ref("");
 		//筛选
 		const showCollapse = ref(false)
 		const closeCollapse = ()=>{
@@ -103,87 +107,101 @@ export default {
 			showCollapse.value=true
 			console.log(showCollapse.value)
 		}
+		function selectHotOptions(listName,listID) {
+			//进行筛选功能.
+			console.log(1)
+		}
 		//热门
 		const showList = ref(true)
 		const changeList =()=>{
 			showList.value=!showList.value
 		}
-		const moreList = reactive({
+		
+		const moreList1 = reactive({
 			data:[
 			{
 				id:1,
-				name:"腾讯1"
+				name:"实习"
 			},
 			{
 				id:2,
-				name:"腾讯2"
+				name:"校招"
 			},
 			{
 				id:3,
-				name:"腾讯3"
+				name:"社招"
 			}
 		]
 		})
+		const moreList2 = reactive({
+			data:[
+			{
+				id:1,
+				name:"重庆"
+			},
+			{
+				id:2,
+				name:"北京"
+			},
+			{
+				id:3,
+				name:"上海"
+			}
+		]
+		})
+		const moreList3 = reactive({
+			data:[
+			{
+				id:1,
+				name:"金融"
+			},
+			{
+				id:2,
+				name:"IT"
+			},
+			{
+				id:3,
+				name:"教育"
+			}
+		]
+		})
+		//搜索操作
+		function search(){
+			if(inputValue.value==="")return;
+			console.log("searching!",inputValue.value);
+			//后端接口，将搜索结果放入detail中
+		}
+		
 		//搜索结果筛选
 		const tabTarget = ref(1)
 		const changeTabTarget = (target)=>{
 			tabTarget.value=target
 		}
-		const detail ={
+		const detail =reactive([{
 			com_name:'腾讯',
-			com_address:"重庆市南部上课地方",
+			com_address:"重庆市南岸区",
 			pos_name:"开发工程师",
 			pos_salary:100000,
 			credibility:'高',
 			quantity:1000,
 			release_time:'2010-10-10'
-		}
+		},{
+			com_name:'字节跳动',
+			com_address:"重庆市渝北区",
+			pos_name:"前端工程师",
+			pos_salary:233333,
+			credibility:'不高不低',
+			quantity:6666,
+			release_time:'2077-1-2'
+		}]);
 		const popup=ref(null)
 		const open=()=>{
 			console.log(popup)
 			popup.value.open('bottom')
 		}
-		const popList=[{
-			"letter": "A",
-			"data": [
-				"阿克苏机场",
-				"阿拉山口机场",
-				"阿勒泰机场",
-				"阿里昆莎机场",
-				"安庆天柱山机场",
-				"澳门国际机场"
-			]
-		}, {
-			"letter": "B",
-			"data": [
-				"保山机场",
-				"包头机场",
-				"北海福成机场",
-				"北京南苑机场",
-				"北京首都国际机场"
-			]
-		},{
-			"letter": "c",
-			"data": [
-				"保山机场",
-				"包头机场",
-				"北海福成机场",
-				"北京南苑机场",
-				"北京首都国际机场"
-			]
-		},{
-			"letter": "d",
-			"data": [
-				"保山机场",
-				"包头机场",
-				"北海福成机场",
-				"北京南苑机场",
-				"北京首都国际机场"
-			]
-		},
-		
-		]
+		const popList=pop_list;
 		return {
+			inputValue,
 			searchResult,
 			popList,
 			open,
@@ -191,14 +209,18 @@ export default {
 			detail,
 			tabStatus,
 			changeList,
+			selectHotOptions,
 			showList,
-			moreList,
+			moreList1,
+			moreList2,
+			moreList3,
 			changeTab,
 			showCollapse,
 			closeCollapse,
 			openCollapse,
 			tabTarget,
-			changeTabTarget
+			changeTabTarget,
+			search
 		}
 	}
 }

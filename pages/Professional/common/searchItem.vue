@@ -1,21 +1,21 @@
 <template>
 	<view class="search_card_item">
 		<view class="item_label">
-			<view class="com_name">{{$props.detail.com_name}}</view>
-			<view class="com_address">{{$props.detail.com_address}}</view>
+			<view class="com_name">{{imformation.com_name}}</view>
+			<view class="com_address">{{imformation.com_address}}</view>
 		</view>
 		<view class="item_content">
-			<view class="pos_name">{{$props.detail.pos_name}}</view>
+			<view class="pos_name">{{imformation.pos_name}}</view>
 			<view class="pos_salary">
-				<span class="num">{{$props.detail.pos_salary}}</span>
+				<span class="num">{{imformation.pos_salary}}</span>
 				<span class="unit">/月</span>
 			</view>
 		</view>
 		<view class="item_more">
 			<view class="item_more_left">
-				<view class="more_item">可信度:{{$props.detail.credibility}}</view>
-				<view class="more_item">点赞量:{{$props.detail.quantity}}</view>
-				<view class="more_item">发布时间:{{$props.detail.release_time}}</view>
+				<view class="more_item">可信度:{{imformation.credibility}}</view>
+				<view class="more_item">点赞量:{{imformation.quantity}}</view>
+				<view class="more_item">发布时间:{{imformation.release_time}}</view>
 			</view>
 			<view class="enterDetail"  @click='enterDetail'>查看详情 ></view>
 		</view>
@@ -23,18 +23,31 @@
 </template>
 
 <script>
+	import {reactive} from "vue";
 	export default {
-		props:['detail'],
-		setup(){
+		props:{
+			detail:Object,
+		},
+		setup(props){
+			const imformation = reactive({
+				com_name:props.detail.com_name,
+				com_address:props.detail.com_address,
+				pos_name:props.detail.pos_name,
+				pos_salary:props.detail.pos_salary,
+				credibility:props.detail.credibility,
+				quantity:props.detail.quantity,
+				release_time:props.detail.release_time
+			});
 			//查看详情
 			const enterDetail=()=>{
-				console.log(12123)
 				uni.navigateTo({
-					url:"/pages/Professional/professionalDetail/professionalDetail"
+					url:`/pages/Professional/professionalDetail/professionalDetail?`
+					+`com_name=${imformation.com_name}&com_address=${imformation.com_address}&pos_name=${imformation.pos_name}&pos_salary=${imformation.pos_salary}&credibility=${imformation.credibility}&quantity=${imformation.quantity}&release_time=${imformation.release_time}`
 				})
 			}
 			return{
-				enterDetail
+				enterDetail,
+				imformation
 			}
 		}
 	}
