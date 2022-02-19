@@ -3,6 +3,7 @@
 		<view class="header">
 			<view class="header_logo">logo</view>
 			<view class="header_list">
+				<!-- 1-普通职业 2-新兴职业 -->
 				<view class="header_tab" :class="{header_tab_line:tabStatus===1}" @click="changeTab(1)">普通职业</view>
 				<view class="header_tab" :class="{header_tab_line:tabStatus===2}" @click="changeTab(2)">新兴职业</view>
 			</view>
@@ -64,9 +65,10 @@
 		toRaw
 	} from 'vue'
 	export default {
-		setup() {
+		setup(options) {
 			//tab 切换
-			const tabStatus = ref(1)
+			console.log(options,options.target)
+			const tabStatus = ref(parseInt(options.target))
 			const changeTab = (target) => {
 				tabStatus.value = target;
 				loadingList();

@@ -4,14 +4,14 @@
 				<view class="header_logo">普通职业</view>			
 		</view>
 		<view class="content_search">
-				<uni-easyinput v-model="inputValue" placeholder="请输入公司名称/城市/岗位" @iconClick="search()" prefixIcon="search"></uni-easyinput>
+				<uni-easyinput v-model="sendInformation.information" placeholder="请输入公司名称/城市/岗位" @iconClick="search()" prefixIcon="search"></uni-easyinput>
 		</view>
 		<view class="content_more">
 			<view class="more_list">
 				<view class="label">类型</view>
 				<view class="list_scroll">
 					<view class="sel_list">
-						<view class="sel_item" v-for="item in moreList1.data" :key="item.id" @click="selectHotOptions(moreList1,item.id)">{{item.name}}</view>
+						<view class="sel_item" v-for="item in typeList.data" :key="item.id" @click="chooseType(item.id)">{{item.name}}</view>
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -20,8 +20,8 @@
 				<view class="label">城市</view>
 				<view class="list_scroll">
 					<view class="sel_list">
-						<view class="sel_item" :class="sel_item"
-						v-for="item in moreList2.data" :key="item.id" @click="selectHotOptions(moreList2,item.id)">{{item.name}}</view>
+						<view class="sel_item"
+						v-for="item in cityList.data" :key="item.id" @click="chooseCity(item.id)">{{item.name}}</view>
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -30,7 +30,7 @@
 				<view class="label">行业</view>
 				<view class="list_scroll">
 					<view class="sel_list">
-						<view class="sel_item" v-for="item in moreList3.data" :key="item.id" @click="selectHotOptions(moreList3,item.id)">{{item.name}}</view>
+						<view class="sel_item" v-for="item in jobList.data" :key="item.id" @click="chooseJob(item.id)">{{item.name}}</view>
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -83,24 +83,33 @@
 import {ref,reactive,toRaw} from 'vue'
 import searchItem from "../../common/searchItem.vue"
 import pop_list from "../../../../static/json/pop_list.json";
+import {sendRequest} from "../../../utils/utils.js"
+import router from "../../../utils/route.js";
 export default {
 	components:{
 		searchItem
 	},
+	// TODO 在加载页面时开始搜索操作，同时将传递来的参数放入sendInformation.information中进行显示.
 	onLoad(options) {
 		console.log(1)
 	},
-	setup(options){
-		// TODO 在加载页面时开始搜索操作，同时将传递来的参数放入inputValue中进行显示.
-		//传递过来的参数统一放在这里
-		const searchResult = reactive(options);
+	setup(){
 		//tab 切换
-		const tabStatus = ref(1)
+		const tabStatus = ref(1)//1-按时间排序 2-按点赞数排序 3-按可信度排序
 		const changeTab =(target)=>{
 			tabStatus.value=target
 		}
-		//输入框
-		const inputValue = ref("");
+		//发送信息对象
+		// TODO 要发送的信息貌似不匹配（dSalary和hSalary没有对应的入口）
+		const sendInformation = reactive({
+			information:"",
+			city:0,
+			// dSalary:???,
+			// hSalary:???,
+			order:tabStatus.value,
+			currentPage:1,
+			pageSize:10
+		})
 		//筛选
 		const showCollapse = ref(false)
 		const closeCollapse = ()=>{
@@ -111,17 +120,24 @@ export default {
 			showCollapse.value=true
 			console.log(showCollapse.value)
 		}
-		function selectHotOptions(listName,listID) {
-			//进行筛选功能.
-			console.log(2)
-		}
 		//热门
 		const showList = ref(true)
 		const changeList =()=>{
 			showList.value=!showList.value
 		}
+		function chooseType(typeId){
+			console.log(typeId)
+		}
+		function chooseCity(cityId){
+			// TODO 对选择的选项进行高亮
+			sendInformation.city=cityId;
+			// for(let key in ci)
+		}
+		function chooseJob(JobId){
+			console.log(jobId);
+		}
 		
-		const moreList1 = reactive({
+		const typeList = reactive({
 			data:[
 			{
 				id:1,
@@ -137,7 +153,7 @@ export default {
 			}
 		]
 		})
-		const moreList2 = reactive({
+		const cityList = reactive({
 			data:[
 			{
 				id:1,
@@ -153,7 +169,7 @@ export default {
 			}
 		]
 		})
-		const moreList3 = reactive({
+		const jobList = reactive({
 			data:[
 			{
 				id:1,
@@ -171,15 +187,31 @@ export default {
 		})
 		//搜索操作
 		function search(){
-			if(inputValue.value==="")return;
-			console.log("searching!",inputValue.value);
-			//后端接口，将搜索结果放入detail中
+			if(sendInformation.information==="")return;
+			console.log("searching!",toRaw(sendInformation));
+			// TODO 跨域了
+			uni.request({
+				url:"http://203.56.169.102:8084"+router.getActicleList,
+				method:"POST",
+				data:toRaw(sendInformation),
+				fail(error){
+					uni.showModal({
+						content:"搜索失败!错误代码为:"+error.errMsg,
+						showCancel:false,
+					})
+					return;
+				},
+				success(data) {
+					console.log(data);
+					// TODO　将返回的数据保存到detail中
+				}
+			})
 		}
 		
 		//搜索结果筛选
 		const tabTarget = ref(1)
 		const changeTabTarget = (target)=>{
-			tabTarget.value=target
+			tabTarget.value=target;
 		}
 		const detail =reactive([{
 			com_name:'腾讯',
@@ -205,19 +237,20 @@ export default {
 		}
 		const popList=pop_list;
 		return {
-			inputValue,
-			searchResult,
+			sendInformation,
 			popList,
 			open,
 			popup,
 			detail,
 			tabStatus,
 			changeList,
-			selectHotOptions,
+			chooseType,
+			chooseCity,
+			chooseJob,
 			showList,
-			moreList1,
-			moreList2,
-			moreList3,
+			typeList,
+			cityList,
+			jobList,
 			changeTab,
 			showCollapse,
 			closeCollapse,

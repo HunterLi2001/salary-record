@@ -4,14 +4,25 @@
 			<view class="headLogo">SALARY SHOW</view>
 			<view class="headselect">
 				<view @click="enter">薪资查询</view>
-				<view @click="enterProfessional(0)">普通职业</view>
-				<view @click="enterProfessional(1)">新兴职业</view>
+				<!-- 1-普通职业 2-新兴职业 -->
+				<view @click="enterProfessional(1)">普通职业</view>
+				<view @click="enterProfessional(2)">新兴职业</view>
 			</view>
 		</view>
 		<view class="content">
-			
+				<view class="item">五险一金查询方式</view>
+				<view class="item">五险一金的使用</view>
+				<view class="item">各城市五险一金缴纳比例</view>
+				<view class="item">个人所得税相关政策</view>
+				<view class="item">减免税申报条件</view>
+		</view>			
+		<!-- <ad></ad> -->
+		<view class="footer">
+			<view class="bottom_tabelbar">
+				<navigator class="tabelbar_item active" url="../releaseProfessional/releaseProfessional">发布信息</navigator>
+				<navigator class="tabelbar_item" url="#">薪资查询</navigator>
+			</view>
 		</view>
-		<view class="footer"></view>
 	</view>
 </template>
 
@@ -32,10 +43,16 @@
 				uni.navigateTo({
 				    url: `../Professional/Professional/Professional?target=${target}`
 				});
+			};
+			function enter(){
+				uni.navigateTo({
+					url:"#",
+				})
 			}
 			
 			return {
-				enterProfessional
+				enterProfessional,
+				enter
 			}
 		}
 	}
@@ -66,5 +83,53 @@
 	.title {
 		font-size: 36rpx;
 		color: #8f8f94;
+	}
+	
+	
+</style>
+<style lang="scss" scoped>
+	.indexPage{
+		background-color: #00bf57;
+	}
+	.content{
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		background-color: white;
+		.item{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border: 5rpx solid #00bf57;
+			color: #00bf57;
+			border-radius: 25rpx;
+			width: 250rpx;
+			height: 75rpx;
+			font-size: 30rpx;
+			text-align: center;
+			padding: 20rpx 20rpx;
+			margin: 5rpx 20rpx;
+		}
+	}
+	.bottom_tabelbar {
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+	
+		.tabelbar_item {
+			background-color: #eeeeee;
+			display: inline-block;
+			width: 50%;
+			height: 100rpx;
+			line-height: 100rpx;
+			text-align: center;
+			font-family: "黑体";
+		}
+	
+		.active {
+			color: red;
+		}
 	}
 </style>
