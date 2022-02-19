@@ -87,8 +87,12 @@ export default {
 	components:{
 		searchItem
 	},
+	onLoad(options) {
+		console.log(1)
+	},
 	setup(options){
 		// TODO 在加载页面时开始搜索操作，同时将传递来的参数放入inputValue中进行显示.
+		//传递过来的参数统一放在这里
 		const searchResult = reactive(options);
 		//tab 切换
 		const tabStatus = ref(1)
@@ -109,7 +113,7 @@ export default {
 		}
 		function selectHotOptions(listName,listID) {
 			//进行筛选功能.
-			console.log(1)
+			console.log(2)
 		}
 		//热门
 		const showList = ref(true)

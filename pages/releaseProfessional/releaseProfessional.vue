@@ -280,22 +280,37 @@
 					content: "你确定要提交吗？",
 					success(res) {
 						if (res.confirm) {
-							uni.showModal({
-								content: "提交成功！",
-								showCancel: false
-							})
 							let obj = {
 								company: company.value,
-								job: job.value,
+								post: job.value,
 								city: city.value,
 								salary: salary.value, 
 								type: tabStatus.value === 1 ? selType.value : 0, //0为选择新兴职业时的类型代码
-								education: sel_education.value,
-								industry: sel_industry.value,
-								jobNote: job_note.value
+								degree: sel_education.value,
+								profession: sel_industry.value,
+								// openId:unicloud.getCurrentUserInfo().uid,// TODO 涉及到云函数？
+								explain: job_note.value
 							}
 							console.log(obj);
-							//进入后端代码
+							uni.request({
+								url:"/publish/auditNormalWork",
+								method:"post",
+								data:obj,
+								success(message) {
+									console.log(message);
+									uni.showModal({
+										content: "提交成功！",
+										showCancel: false
+									})
+								},
+								fail(error) {
+									console.log(error);
+									uni.showModal({
+										content: "提交失败！错误代码为：" + error.errMsg,
+										showCancel: false
+									})
+								}
+							})
 						} else if (res.cancel) {
 							return;
 						}
