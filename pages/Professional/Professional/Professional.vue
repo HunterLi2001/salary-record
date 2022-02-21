@@ -42,7 +42,7 @@
 				<!-- <view class="more_hidden" @click="changeList">X</view> -->
 			</view>
 			<view class="more_list" v-if="showList">
-				<view class="more_list_item" v-for="item in tabStatus===1?moreList1.data:moreList2.data" :key="item.id"
+				<view class="more_list_item" v-for="item in tabStatus===1?ordinaryList.data:emergingList.data" :key="item.id"
 					@click="selectHotOptions(item.id)">
 					{{item.name}}
 				</view>
@@ -100,7 +100,7 @@
 				}
 			}
 			const moreList = reactive({});
-			const moreList1 = reactive({
+			const ordinaryList = reactive({
 				data: [{
 						id: 1,
 						name: "腾讯"
@@ -131,7 +131,7 @@
 					}
 				]
 			})
-			const moreList2 = reactive({
+			const emergingList = reactive({
 				data: [{
 						id: 1,
 						name: "抖音"
@@ -160,7 +160,7 @@
 			})
 
 			function loadingList() {
-				moreList.value = tabStatus.value === 1 ? toRaw(moreList1.data) : toRaw(moreList2.data);
+				moreList.value = tabStatus.value === 1 ? toRaw(ordinaryList.data) : toRaw(emergingList.data);
 			}
 			const search = () => {
 				uni.navigateTo({
@@ -178,8 +178,8 @@
 				changeList,
 				showList,
 				moreList,
-				moreList1,
-				moreList2,
+				ordinaryList,
+				emergingList,
 				changeTab,
 				showCollapse,
 				closeCollapse,

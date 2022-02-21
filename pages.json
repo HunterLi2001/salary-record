@@ -1,6 +1,12 @@
 {
 	"pages": [
 		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		},
+		{
 		    "path" : "pages/releaseProfessional/releaseProfessional",
 		    "style" :                                                                                    
 		    {
@@ -23,12 +29,7 @@
 		        "enablePullDownRefresh": false
 		    }  
 		},
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "uni-app"
-			}
-		},
+		
 		{
 		    "path" : "pages/Professional/professionalDetail/professionalDetail",
 		    "style" :                                                                                    

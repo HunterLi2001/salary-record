@@ -3,10 +3,18 @@
 		<view class="header">
 			<view class="headLogo">SALARY SHOW</view>
 			<view class="headselect">
-				<view @click="enter">薪资查询</view>
+				<view @click="enter" class="salary">薪资查询</view>
 				<!-- 1-普通职业 2-新兴职业 -->
-				<view @click="enterProfessional(1)">普通职业</view>
-				<view @click="enterProfessional(2)">新兴职业</view>
+				<view class="outer">
+					<view @click="enterProfessional(1)" class="item">
+						<text>普通职业</text>
+						<text class="info">打工人</text>
+					</view>
+					<view @click="enterProfessional(2)" class="item">
+						<text>新兴职业</text>
+						<text class="info">创新者</text>
+					</view>
+				</view>
 			</view>
 		</view>
 		<view class="content">
@@ -16,7 +24,7 @@
 				<view class="item">个人所得税相关政策</view>
 				<view class="item">减免税申报条件</view>
 		</view>			
-		<!-- <ad></ad> -->
+		<ad></ad>
 		<view class="footer">
 			<view class="bottom_tabelbar">
 				<navigator class="tabelbar_item active" url="../releaseProfessional/releaseProfessional">发布信息</navigator>
@@ -91,6 +99,48 @@
 	.indexPage{
 		background-color: #00bf57;
 	}
+	.header{
+		.headLogo{
+			width: 50%;
+			color: white;
+			font-size: 75rpx;
+			margin: 0 auto;
+			text-align: center;
+		}
+		.salary{
+			display: flex;
+			width: 30%;
+			height: 100rpx;
+			border: 5rpx solid white;
+			border-radius: 20rpx;
+			color: white;
+			align-items: center;
+			justify-content: center;
+			margin: 0 auto;
+		}
+		.outer{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 15rpx 0;
+			.item{
+				display: flex;
+				flex-wrap: wrap;
+				width: 30%;
+				height: 130rpx;
+				border: 5rpx solid white;
+				border-radius: 20rpx;
+				color: white;
+				align-items: center;
+				justify-content: center;
+				margin-left: 10rpx;
+				.info{
+					font-size: 30rpx;
+				}
+			}
+		}
+		
+	}
 	.content{
 		display: flex;
 		flex-direction: row;
@@ -105,12 +155,13 @@
 			border: 5rpx solid #00bf57;
 			color: #00bf57;
 			border-radius: 25rpx;
-			width: 250rpx;
+			width: 150rpx;
 			height: 75rpx;
 			font-size: 30rpx;
 			text-align: center;
 			padding: 20rpx 20rpx;
-			margin: 5rpx 20rpx;
+			margin: 0 20rpx;
+			margin-top: 20rpx;
 		}
 	}
 	.bottom_tabelbar {

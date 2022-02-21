@@ -132,10 +132,11 @@
 
 <script>
 	import {ref,reactive} from 'vue';
-	import {dropdownMenuSelection,checkStrContain} from "../utils/utils.js";
+	import {dropdownMenuSelection,checkStrContain,sendRequest} from "../utils/utils.js";
 	import edu_list from "../../static/json/edu_list.json";
 	import indu_list from "../../static/json/indu_list.json";
 	import company_list from "../../static/json/company_list.json";
+	import router from "../utils/route.js";
 	export default {
 		setup() {
 			//切换tab
@@ -288,29 +289,10 @@
 								type: tabStatus.value === 1 ? selType.value : 0, //0为选择新兴职业时的类型代码
 								degree: sel_education.value,
 								profession: sel_industry.value,
-								// openId:unicloud.getCurrentUserInfo().uid,// TODO 涉及到云函数？
 								explain: job_note.value
 							}
 							console.log(obj);
-							uni.request({
-								url:"/publish/auditNormalWork",
-								method:"post",
-								data:obj,
-								success(message) {
-									console.log(message);
-									uni.showModal({
-										content: "提交成功！",
-										showCancel: false
-									})
-								},
-								fail(error) {
-									console.log(error);
-									uni.showModal({
-										content: "提交失败！错误代码为：" + error.errMsg,
-										showCancel: false
-									})
-								}
-							})
+							sendRequest("http://203.56.169.102:8084",obj.type===0?emergingPublish:ordinaryPublish,"post",obj,"提交成功！","提交失败！");
 						} else if (res.cancel) {
 							return;
 						}

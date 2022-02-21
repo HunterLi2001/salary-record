@@ -1,5 +1,8 @@
 export default {
-	publish:"/publish/auditNormalWork",
-	getDetail:"/showDetail/getNewWork",
-	getActicleList:"/showOrder/orderGetNewWork"
+	ordinaryPublish:"/publish/auditNormalWork",
+	ordinaryGetDetail:"/showDetail/getNormalWork",
+	ordinaryGetActicleList:"/showOrder/orderGetNormalWork",
+	emergingPublish:"/publish/auditNewWork",
+	emergingGetDetail:"/showDetail/getNewWork",
+	emergingGetActicleList:"/showOrder/orderGetNewWork"
 }
