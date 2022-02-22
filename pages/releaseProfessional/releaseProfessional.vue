@@ -131,8 +131,15 @@
 </template>
 
 <script>
-	import {ref,reactive} from 'vue';
-	import {dropdownMenuSelection,checkStrContain,sendRequest} from "../utils/utils.js";
+	import {
+		ref,
+		reactive
+	} from 'vue';
+	import {
+		dropdownMenuSelection,
+		checkStrContain,
+		sendRequest
+	} from "../utils/utils.js";
 	import edu_list from "../../static/json/edu_list.json";
 	import indu_list from "../../static/json/indu_list.json";
 	import company_list from "../../static/json/company_list.json";
@@ -161,18 +168,18 @@
 			// const alternativeCompany = reactive(["1","2","3"]);
 			// const alternativeCompany = reactive([]);
 			const companyList = company_list;
-			
+
 			// TODO 在调用quickShowInputCompany 时，companyList会莫名奇妙出现undefined的问题。 
-			const alternativeCompany = reactive(quickShowInputCompany(company.value.trim(),companyList,3));
+			const alternativeCompany = reactive(quickShowInputCompany(company.value.trim(), companyList, 3));
 			// const alternativeCompany = reactive([]);
-			function quickShowInputCompany(name,array,length) {
+			function quickShowInputCompany(name, array, length) {
 				console.log(array)
-				if(array.length < 1){
-				    return;
+				if (array.length < 1) {
+					return;
 				}
 				let result = [];
 				for (let key in array) {
-					if (checkStrContain(array[key].name,name) && result.length < length) {
+					if (checkStrContain(array[key].name, name) && result.length < length) {
 						result.push(array[key])
 					}
 				}
@@ -285,14 +292,15 @@
 								company: company.value,
 								post: job.value,
 								city: city.value,
-								salary: salary.value, 
+								salary: salary.value,
 								type: tabStatus.value === 1 ? selType.value : 0, //0为选择新兴职业时的类型代码
 								degree: sel_education.value,
 								profession: sel_industry.value,
 								explain: job_note.value
 							}
 							console.log(obj);
-							sendRequest("http://203.56.169.102:8084",obj.type===0?emergingPublish:ordinaryPublish,"post",obj,"提交成功！","提交失败！");
+							sendRequest("http://203.56.169.102:8084", obj.type === 0 ? emergingPublish :
+								ordinaryPublish, "post", obj, "提交成功！", "提交失败！");
 						} else if (res.cancel) {
 							return;
 						}

@@ -42,8 +42,8 @@
 				<!-- <view class="more_hidden" @click="changeList">X</view> -->
 			</view>
 			<view class="more_list" v-if="showList">
-				<view class="more_list_item" v-for="item in tabStatus===1?ordinaryList.data:emergingList.data" :key="item.id"
-					@click="selectHotOptions(item.id)">
+				<view class="more_list_item" v-for="item in tabStatus===1?ordinaryList.data:emergingList.data"
+					:key="item.id" @click="selectHotOptions(item.id)">
 					{{item.name}}
 				</view>
 				<view class="fill_item" v-for="n in 20" :key="n"></view>
@@ -67,7 +67,7 @@
 	export default {
 		setup(options) {
 			//tab 切换
-			console.log(options,options.target)
+			console.log(options, options.target)
 			const tabStatus = ref(parseInt(options.target))
 			const changeTab = (target) => {
 				tabStatus.value = target;

@@ -18,16 +18,17 @@
 			</view>
 		</view>
 		<view class="content">
-				<view class="item">五险一金查询方式</view>
-				<view class="item">五险一金的使用</view>
-				<view class="item">各城市五险一金缴纳比例</view>
-				<view class="item">个人所得税相关政策</view>
-				<view class="item">减免税申报条件</view>
-		</view>			
+			<view class="item">五险一金查询方式</view>
+			<view class="item">五险一金的使用</view>
+			<view class="item">各城市五险一金缴纳比例</view>
+			<view class="item">个人所得税相关政策</view>
+			<view class="item">减免税申报条件</view>
+		</view>
 		<ad></ad>
 		<view class="footer">
 			<view class="bottom_tabelbar">
-				<navigator class="tabelbar_item active" url="../releaseProfessional/releaseProfessional">发布信息</navigator>
+				<navigator class="tabelbar_item active" url="../releaseProfessional/releaseProfessional">发布信息
+				</navigator>
 				<navigator class="tabelbar_item" url="#">薪资查询</navigator>
 			</view>
 		</view>
@@ -35,29 +36,32 @@
 </template>
 
 <script>
-	import {ref} from 'vue'
+	import {
+		ref
+	} from 'vue'
 	export default {
 		onShareAppMessage(res) {
-		    if (res.from === 'button') {// 来自页面内分享按钮
-		      console.log(res.target)
-		    }
-		    return {
-		      title: '自定义分享标题',
-		      path: '/pages/test/test?id=123'
-		    }
-		  },
-		setup(){
-			const enterProfessional=(target)=>{
+			if (res.from === 'button') { // 来自页面内分享按钮
+				console.log(res.target)
+			}
+			return {
+				title: '自定义分享标题',
+				path: '/pages/test/test?id=123'
+			}
+		},
+		setup() {
+			const enterProfessional = (target) => {
 				uni.navigateTo({
-				    url: `../Professional/Professional/Professional?target=${target}`
+					url: `../Professional/Professional/Professional?target=${target}`
 				});
 			};
-			function enter(){
+
+			function enter() {
 				uni.navigateTo({
-					url:"#",
+					url: "#",
 				})
 			}
-			
+
 			return {
 				enterProfessional,
 				enter
@@ -92,22 +96,22 @@
 		font-size: 36rpx;
 		color: #8f8f94;
 	}
-	
-	
 </style>
 <style lang="scss" scoped>
-	.indexPage{
+	.indexPage {
 		background-color: #00bf57;
 	}
-	.header{
-		.headLogo{
+
+	.header {
+		.headLogo {
 			width: 50%;
 			color: white;
 			font-size: 75rpx;
 			margin: 0 auto;
 			text-align: center;
 		}
-		.salary{
+
+		.salary {
 			display: flex;
 			width: 30%;
 			height: 100rpx;
@@ -118,12 +122,14 @@
 			justify-content: center;
 			margin: 0 auto;
 		}
-		.outer{
+
+		.outer {
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			margin: 15rpx 0;
-			.item{
+
+			.item {
 				display: flex;
 				flex-wrap: wrap;
 				width: 30%;
@@ -134,21 +140,24 @@
 				align-items: center;
 				justify-content: center;
 				margin-left: 10rpx;
-				.info{
+
+				.info {
 					font-size: 30rpx;
 				}
 			}
 		}
-		
+
 	}
-	.content{
+
+	.content {
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
 		align-items: center;
 		justify-content: center;
 		background-color: white;
-		.item{
+
+		.item {
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -164,11 +173,12 @@
 			margin-top: 20rpx;
 		}
 	}
+
 	.bottom_tabelbar {
 		width: 100%;
 		position: fixed;
 		bottom: 0;
-	
+
 		.tabelbar_item {
 			background-color: #eeeeee;
 			display: inline-block;
@@ -178,7 +188,7 @@
 			text-align: center;
 			font-family: "黑体";
 		}
-	
+
 		.active {
 			color: red;
 		}

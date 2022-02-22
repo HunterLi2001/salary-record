@@ -4,7 +4,8 @@
 			<view class="header_logo">新兴职业</view>
 		</view>
 		<view class="content_search">
-			<uni-easyinput v-model="sendInformation.information" placeholder="请输入公司名称/城市/岗位" prefixIcon="search">
+			<uni-easyinput v-model="sendInformation.information" placeholder="请输入公司名称/城市/岗位" prefixIcon="search"
+				@iconClick="search()">
 			</uni-easyinput>
 		</view>
 		<view class="content_more">
@@ -20,18 +21,20 @@
 			</view>
 			<view class="more_list">
 				<view class="label">收入区间</view>
-					<view class="input_salary">
-						<uni-easyinput class="input" v-model="sendInformation.dSalary" placeholder="请输入最低工资" @keydown="clearActive"></uni-easyinput>
-						<view>~</view>
-						<uni-easyinput class="input" v-model="sendInformation.hSalary" placeholder="请输入最高工资" @keydown="clearActive"></uni-easyinput>
-					</view>
+				<view class="input_salary">
+					<uni-easyinput class="input" v-model="sendInformation.dSalary" placeholder="请输入最低工资"
+						@keydown="clearActive"></uni-easyinput>
+					<view>~</view>
+					<uni-easyinput class="input" v-model="sendInformation.hSalary" placeholder="请输入最高工资"
+						@keydown="clearActive"></uni-easyinput>
+				</view>
 			</view>
 			<view class="more_list">
 				<view class="label">常见区间</view>
 				<view class="list_scroll">
 					<view class="sel_list">
-						<view class="sel_item_salary" :class="item.active" v-for="item in salaryList.data" :key="item.id"
-							@click="chooseSalary(item.id)">{{item.name}}</view>
+						<view class="sel_item_salary" :class="item.active" v-for="item in salaryList.data"
+							:key="item.id" @click="chooseSalary(item.id)">{{item.name}}</view>
 					</view>
 				</view>
 			</view>
@@ -42,8 +45,8 @@
 					<view class="sel_item" :class="{seled_item:tabTarget===2}" @click="changeTabTarget(2)">按点赞数排序</view>
 					<view class="sel_item" :class="{seled_item:tabTarget===3}" @click="changeTabTarget(3)">按可信度排序</view>
 				</view>
-				<view v-for="item in 10" :key="item" class="searchItem">
-					<searchItem :detail="detail"></searchItem>
+				<view v-for="item in detail" :key="item.id" class="searchItem">
+					<searchItem :detail="item" :type="2"></searchItem>
 				</view>
 			</view>
 		</view>
@@ -78,7 +81,8 @@
 <script>
 	import {
 		ref,
-		reactive
+		reactive,
+		toRaw
 	} from 'vue'
 	import searchItem from "../../common/searchItem.vue"
 	import pop_list from "../../../../static/json/pop_list.json";
@@ -189,18 +193,19 @@
 					}
 				]
 			})
-			function search(){
-				if(sendInformation.information==="")return;
-				console.log("searching!",toRaw(sendInformation));
+
+			function search() {
+				if (sendInformation.information === "") return;
+				console.log("searching!", toRaw(sendInformation));
 				// TODO 跨域了
 				uni.request({
-					url:"http://203.56.169.102:8084"+router.emergingGetActicleList,
-					method:"POST",
-					data:toRaw(sendInformation),
-					fail(error){
+					url: "http://203.56.169.102:8084" + router.emergingGetActicleList,
+					method: "POST",
+					data: toRaw(sendInformation),
+					fail(error) {
 						uni.showModal({
-							content:"搜索失败!错误代码为:"+error.errMsg,
-							showCancel:false,
+							content: "搜索失败!错误代码为:" + error.errMsg,
+							showCancel: false,
 						})
 						return;
 					},
@@ -210,34 +215,58 @@
 					}
 				})
 			}
-			function operateData(callbackData){
-				sendInformation.currentPage=callbackData.data.currentPage;
-				sendInformation.pageSize=callBackData.data.pageSize;
-				detail.length=0;
-				for(let i=0;i<callBackData.data.data.length;i++){
-					detail.push(callbackData[i]);
+
+			function operateData(callbackData) {
+				sendInformation.currentPage = callbackData.data.currentPage;
+				sendInformation.pageSize = callBackData.data.pageSize;
+				detail.length = 0;
+				for (let i = 0; i < callBackData.data.data.length; i++) {
+					detail.push(callbackData.data.data[i]);
 				}
+				switchResult(tabTarget.value);
 			}
 			//搜索结果筛选
 			const tabTarget = ref(1)
 			const changeTabTarget = (target) => {
 				tabTarget.value = target
+				switchResult(target);
 			}
+
+			function switchResult(target) {
+				switch (target) {
+					case 1:
+						switchInTime();
+						break;
+					case 2:
+						switchInCredibility();
+						break;
+					case 3:
+						switchInQuantity();
+						break;
+				}
+			}
+
+			function switchInTime() {
+				console.log('switchInTime')
+			}
+
+			function switchInCredibility() {
+				console.log('switchInCredibility')
+			}
+
+			function switchInQuantity() {
+				console.log('switchInQuantity')
+			}
+
 			const detail = reactive([])
 			const popup = ref(null)
 			const open = () => {
 				console.log(popup)
 				popup.value.open('bottom')
 			}
-			//查看详情
-			const enterDetail = () => {
-				uni.navigateTo({
-					url:"../../ProfessionalDetail/ProfessionalDetail"+"?id="+detail.data.data.id
-				})
-			}
 			const popList = pop_list;
-			
-			function clearActive(){
+
+			function clearActive() {
 				for (let i = 0; i < salaryList.data.length; i++) {
 					salaryList.data[i].active = "";
 				}
@@ -245,6 +274,7 @@
 
 			return {
 				sendInformation,
+				search,
 				popList,
 				open,
 				popup,
@@ -260,11 +290,14 @@
 				openCollapse,
 				tabTarget,
 				changeTabTarget,
-				enterDetail,
 				chooseCity,
 				chooseSalary,
 				clearActive,
-				operateData
+				operateData,
+				switchResult,
+				switchInTime,
+				switchInCredibility,
+				switchInQuantity
 			}
 		}
 	}
@@ -340,10 +373,12 @@
 					font-size: 24rpx;
 					color: gray;
 				}
-				.input_salary{
+
+				.input_salary {
 					display: flex;
 					align-items: center;
-					.input{
+
+					.input {
 						width: 300rpx;
 					}
 				}
@@ -369,7 +404,8 @@
 							border-radius: 20rpx;
 							margin-right: 10rpx;
 						}
-						.sel_item_salary{
+
+						.sel_item_salary {
 							flex-shrink: 0;
 							width: 150rpx;
 							text-align: center;

@@ -45,8 +45,8 @@
 					<view class="sel_item" :class="{seled_item:tabTarget===2}" @click="changeTabTarget(2)">按点赞数排序</view>
 					<view class="sel_item" :class="{seled_item:tabTarget===3}" @click="changeTabTarget(3)">按可信度排序</view>
 				</view>
-				<view v-for="item in detail" :key="item" class="searchItem">
-					<searchItem :detail="item"></searchItem>
+				<view v-for="item in detail" :key="item.id" class="searchItem">
+					<searchItem :detail="item" :type="1"></searchItem>
 				</view>
 			</view>
 		</view>
@@ -212,7 +212,6 @@
 			function search() {
 				if (sendInformation.information === "") return;
 				console.log("searching!", toRaw(sendInformation));
-				// TODO 跨域了
 				uni.request({
 					url: "http://203.56.169.102:8084" + router.ordinaryGetActicleList,
 					method: "POST",
@@ -236,14 +235,42 @@
 				sendInformation.pageSize = callBackData.data.pageSize;
 				detail.length = 0;
 				for (let i = 0; i < callBackData.data.data.length; i++) {
-					detail.push(callbackData[i]);
+					detail.push(callbackData.data.data[i]);
 				}
+				switchResult(tabTarget.value);
 			}
 
 			//搜索结果筛选
 			const tabTarget = ref(1)
 			const changeTabTarget = (target) => {
 				tabTarget.value = target;
+				switchResult(target);
+			}
+
+			function switchResult(target) {
+				switch (target) {
+					case 1:
+						switchInTime();
+						break;
+					case 2:
+						switchInCredibility();
+						break;
+					case 3:
+						switchInQuantity();
+						break;
+				}
+			}
+
+			function switchInTime() {
+				console.log("switchInTime")
+			}
+
+			function switchInCredibility() {
+				console.log("switchInCredibility")
+			}
+
+			function switchInQuantity() {
+				console.log("switchInQuantity")
 			}
 			const detail = reactive([]);
 			const popup = ref(null)
@@ -274,7 +301,11 @@
 				tabTarget,
 				changeTabTarget,
 				search,
-				operateData
+				operateData,
+				switchInCredibility,
+				switchInQuantity,
+				switchInTime,
+				switchResult
 			}
 		}
 	}
@@ -287,8 +318,8 @@
 		width: 100%;
 		min-height: 100vh;
 		padding: 20rpx;
-	
-	.header {
+
+		.header {
 			width: 100%;
 			height: 250rpx;
 			color: #fff;
@@ -421,9 +452,9 @@
 
 		.pop_list {
 			height: 800rpx;
-	
+
+		}
 	}
-}
 </style>
 <style lang="scss">
 	.professionPage {
