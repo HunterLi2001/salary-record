@@ -82,7 +82,8 @@
 	import {
 		ref,
 		reactive,
-		toRaw
+		toRaw,
+		onMounted
 	} from 'vue'
 	import searchItem from "../../common/searchItem.vue"
 	import pop_list from "../../../../static/json/pop_list.json";
@@ -94,10 +95,10 @@
 		components: {
 			searchItem
 		},
-		onLoad(options) {
-			console.log(1)
-		},
-		setup() {
+		setup(options) {
+			onMounted(() => {
+				search();
+			})
 			//tab 切换
 			const tabStatus = ref(1) //1-按时间排序 2-按点赞数排序 3-按可信度排序
 			const changeTab = (target) => {
@@ -105,7 +106,7 @@
 			}
 			//发送信息对象
 			const sendInformation = reactive({
-				information: "",
+				information: options.inputValue,
 				city: 0,
 				type: "",
 				profession: "",
@@ -212,30 +213,25 @@
 			function search() {
 				if (sendInformation.information === "") return;
 				console.log("searching!", toRaw(sendInformation));
-				uni.request({
-					url: "http://203.56.169.102:8084" + router.ordinaryGetActicleList,
-					method: "POST",
-					data: toRaw(sendInformation),
-					fail(error) {
+				sendRequest("http://203.56.169.102:8084", router.ordinaryGetActicleList, "post", toRaw(sendInformation),
+					function(data) {
+						console.log(data);
+						operateData(data);
+					},
+					function(error) {
 						uni.showModal({
 							content: "搜索失败!错误代码为:" + error.errMsg,
 							showCancel: false,
 						})
-						return;
-					},
-					success(data) {
-						console.log(data);
-						operateData(data);
-					}
-				})
+					})
 			}
 
-			function operateData(callbackData) {
-				sendInformation.currentPage = callbackData.data.currentPage;
-				sendInformation.pageSize = callBackData.data.pageSize;
+			function operateData(data) {
+				sendInformation.currentPage = data.data.currentPage;
+				sendInformation.pageSize = data.data.pageSize;
 				detail.length = 0;
-				for (let i = 0; i < callBackData.data.data.length; i++) {
-					detail.push(callbackData.data.data[i]);
+				for (let i = 0; i < data.data.data.length; i++) {
+					detail.push(data.data.data[i]);
 				}
 				switchResult(tabTarget.value);
 			}

@@ -14,7 +14,8 @@
 				<view class="list_scroll">
 					<view class="sel_list">
 						<view class="sel_item" :class="item.active" v-for="item in cityList.data" :key="item.id"
-							@click="chooseCity(item.id)">{{item.name}}</view>
+							@click="chooseCity(item.id)">{{ item.name }}
+						</view>
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -34,7 +35,8 @@
 				<view class="list_scroll">
 					<view class="sel_list">
 						<view class="sel_item_salary" :class="item.active" v-for="item in salaryList.data"
-							:key="item.id" @click="chooseSalary(item.id)">{{item.name}}</view>
+							:key="item.id" @click="chooseSalary(item.id)">{{ item.name }}
+						</view>
 					</view>
 				</view>
 			</view>
@@ -51,8 +53,8 @@
 			</view>
 		</view>
 		<!-- <view>
-			<uni-indexed-list :options="popList" :showSelect="true"/>
-		</view> -->
+      <uni-indexed-list :options="popList" :showSelect="true"/>
+    </view> -->
 		<uni-popup ref="popup" type="bottom" background-color="#fff">
 			<view class="pop_list">
 				<view>
@@ -82,52 +84,54 @@
 	import {
 		ref,
 		reactive,
-		toRaw
-	} from 'vue'
-	import searchItem from "../../common/searchItem.vue"
+		toRaw,
+		onMounted
+	} from "vue";
+	import searchItem from "../../common/searchItem.vue";
 	import pop_list from "../../../../static/json/pop_list.json";
 	import {
 		sendRequest
-	} from "../../../utils/utils.js"
+	} from "../../../utils/utils.js";
 	import router from "../../../utils/route.js";
+
 	export default {
 		components: {
 			searchItem
 		},
-		onLoad() {
-			console.log(2)
-		},
-		setup() {
+		setup(options) {
+			onMounted(() => {
+				search();
+			});
 			//tab 切换
-			const tabStatus = ref(1)
+			const tabStatus = ref(1);
 			const changeTab = (target) => {
-				tabStatus.value = target
-			}
+				tabStatus.value = target;
+			};
 
 			const sendInformation = reactive({
-				information: "",
+				information: options.inputValue,
 				city: 0,
 				dSalary: 0,
 				hSalary: 0,
 				order: tabStatus.value,
 				currentPage: 0,
 				pageSize: 0
-			})
+			});
 			//筛选
-			const showCollapse = ref(false)
+			const showCollapse = ref(false);
 			const closeCollapse = () => {
-				showCollapse.value = false
-				console.log(showCollapse.value)
-			}
+				showCollapse.value = false;
+				console.log(showCollapse.value);
+			};
 			const openCollapse = () => {
-				showCollapse.value = true
-				console.log(showCollapse.value)
-			}
+				showCollapse.value = true;
+				console.log(showCollapse.value);
+			};
 			//热门
-			const showList = ref(true)
+			const showList = ref(true);
 			const changeList = () => {
-				showList.value = !showList.value
-			}
+				showList.value = !showList.value;
+			};
 
 			function chooseCity(cityId) {
 				for (let i = 0; i < cityList.data.length; i++) {
@@ -157,6 +161,7 @@
 						break;
 				}
 			}
+
 			const cityList = reactive({
 				data: [{
 						id: 1,
@@ -174,7 +179,7 @@
 						active: ""
 					}
 				]
-			})
+			});
 			const salaryList = reactive({
 				data: [{
 						id: 1,
@@ -192,45 +197,40 @@
 						active: ""
 					}
 				]
-			})
+			});
 
 			function search() {
 				if (sendInformation.information === "") return;
 				console.log("searching!", toRaw(sendInformation));
-				// TODO 跨域了
-				uni.request({
-					url: "http://203.56.169.102:8084" + router.emergingGetActicleList,
-					method: "POST",
-					data: toRaw(sendInformation),
-					fail(error) {
-						uni.showModal({
-							content: "搜索失败!错误代码为:" + error.errMsg,
-							showCancel: false,
-						})
-						return;
-					},
-					success(data) {
+				sendRequest("http://203.56.169.102:8084", router.emergingGetActicleList, "post", toRaw(sendInformation),
+					function(data) {
 						console.log(data);
 						operateData(data);
-					}
-				})
+					},
+					function(error) {
+						uni.showModal({
+							content: "搜索失败!错误代码为:" + error.errMsg,
+							showCancel: false
+						});
+					});
 			}
 
-			function operateData(callbackData) {
-				sendInformation.currentPage = callbackData.data.currentPage;
-				sendInformation.pageSize = callBackData.data.pageSize;
+			function operateData(data) {
+				sendInformation.currentPage = data.data.currentPage;
+				sendInformation.pageSize = data.data.pageSize;
 				detail.length = 0;
-				for (let i = 0; i < callBackData.data.data.length; i++) {
-					detail.push(callbackData.data.data[i]);
+				for (let i = 0; i < data.data.data.length; i++) {
+					detail.push(data.data.data[i]);
 				}
 				switchResult(tabTarget.value);
 			}
+
 			//搜索结果筛选
-			const tabTarget = ref(1)
+			const tabTarget = ref(1);
 			const changeTabTarget = (target) => {
-				tabTarget.value = target
+				tabTarget.value = target;
 				switchResult(target);
-			}
+			};
 
 			function switchResult(target) {
 				switch (target) {
@@ -247,23 +247,23 @@
 			}
 
 			function switchInTime() {
-				console.log('switchInTime')
+				console.log("switchInTime");
 			}
 
 			function switchInCredibility() {
-				console.log('switchInCredibility')
+				console.log("switchInCredibility");
 			}
 
 			function switchInQuantity() {
-				console.log('switchInQuantity')
+				console.log("switchInQuantity");
 			}
 
-			const detail = reactive([])
-			const popup = ref(null)
+			const detail = reactive([]);
+			const popup = ref(null);
 			const open = () => {
-				console.log(popup)
-				popup.value.open('bottom')
-			}
+				console.log(popup);
+				popup.value.open("bottom");
+			};
 			const popList = pop_list;
 
 			function clearActive() {
@@ -298,9 +298,9 @@
 				switchInTime,
 				switchInCredibility,
 				switchInQuantity
-			}
+			};
 		}
-	}
+	};
 </script>
 
 <style scoped lang="scss">
@@ -309,43 +309,43 @@
 		background-color: #00bf57;
 		width: 100%;
 		min-height: 100vh;
-		padding: 20rpx;
+		padding: 20 rpx;
 
 		.header {
 			width: 100%;
-			height: 250rpx;
+			height: 250 rpx;
 			color: #fff;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 
 			.header_logo {
-				margin-top: 25rpx;
-				font-size: 60rpx;
+				margin-top: 25 rpx;
+				font-size: 60 rpx;
 			}
 
 			.header_list {
-				margin-top: 25rpx;
-				font-size: 24rpx;
+				margin-top: 25 rpx;
+				font-size: 24 rpx;
 				display: flex;
 				flex-direction: row;
 				align-items: center;
 
 				.header_tab {
-					margin: 0 40rpx;
+					margin: 0 40 rpx;
 					box-sizing: border-box;
-					padding: 20rpx 0;
+					padding: 20 rpx 0;
 				}
 
 				.header_tab_line {
-					border-bottom: 4rpx solid #fff;
+					border-bottom: 4 rpx solid #fff;
 					border-radius: 5%;
 				}
 			}
 		}
 
 		.content_search {
-			border-radius: 8rpx;
+			border-radius: 8 rpx;
 			overflow: hidden;
 			margin-bottom: 10px;
 		}
@@ -353,9 +353,9 @@
 		.content_more {
 			box-sizing: border-box;
 			width: 100%;
-			padding: 20rpx;
+			padding: 20 rpx;
 			// height: 400rpx;
-			border-radius: 10rpx;
+			border-radius: 10 rpx;
 			box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
 			background-color: #fff;
 			margin-bottom: 10px;
@@ -365,12 +365,12 @@
 				flex-direction: column;
 				justify-content: space-between;
 				align-items: flex-start;
-				margin-top: 15rpx;
+				margin-top: 15 rpx;
 				overflow: scroll;
 
 				.label {
-					margin-left: 15rpx;
-					font-size: 24rpx;
+					margin-left: 15 rpx;
+					font-size: 24 rpx;
 					color: gray;
 				}
 
@@ -379,7 +379,7 @@
 					align-items: center;
 
 					.input {
-						width: 300rpx;
+						width: 300 rpx;
 					}
 				}
 
@@ -389,31 +389,31 @@
 					overflow-x: scroll;
 
 					.sel_list {
-						margin-top: 10rpx;
+						margin-top: 10 rpx;
 						display: flex;
 						flex-direction: row;
 						align-items: center;
 
 						.sel_item {
 							flex-shrink: 0;
-							width: 100rpx;
+							width: 100 rpx;
 							text-align: center;
-							padding: 10rpx;
-							border: 1rpx solid #00bf57;
+							padding: 10 rpx;
+							border: 1 rpx solid #00bf57;
 							color: #00bf57;
-							border-radius: 20rpx;
-							margin-right: 10rpx;
+							border-radius: 20 rpx;
+							margin-right: 10 rpx;
 						}
 
 						.sel_item_salary {
 							flex-shrink: 0;
-							width: 150rpx;
+							width: 150 rpx;
 							text-align: center;
-							padding: 10rpx;
-							border: 1rpx solid #00bf57;
+							padding: 10 rpx;
+							border: 1 rpx solid #00bf57;
 							color: #00bf57;
-							border-radius: 20rpx;
-							margin-right: 10rpx;
+							border-radius: 20 rpx;
+							margin-right: 10 rpx;
 						}
 
 						.active {
@@ -429,7 +429,7 @@
 			}
 
 			.more_line {
-				margin-top: 20rpx;
+				margin-top: 20 rpx;
 				border: 1px solid rgba(0, 0, 0, 0.06);
 				border-radius: 10%;
 			}
@@ -440,30 +440,30 @@
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
-					margin-bottom: 40rpx;
+					margin-bottom: 40 rpx;
 
 					.sel_item {
-						padding: 10rpx 0;
-						margin: 0 20rpx;
-						font-size: 28rpx;
+						padding: 10 rpx 0;
+						margin: 0 20 rpx;
+						font-size: 28 rpx;
 						color: gray;
 					}
 
 					.seled_item {
 						color: #00bf57;
-						border-bottom: 2rpx solid #00bf57;
+						border-bottom: 2 rpx solid #00bf57;
 					}
 				}
 
 				.searchItem {
-					margin: 20rpx 0;
+					margin: 20 rpx 0;
 				}
 			}
 
 		}
 
 		.pop_list {
-			height: 800rpx;
+			height: 800 rpx;
 		}
 	}
 </style>
@@ -477,7 +477,7 @@
 
 		.uni-indexed-list.data-v-0f58ddf9 {
 			top: auto;
-			height: 400rpx;
+			height: 400 rpx;
 		}
 	}
 </style>
