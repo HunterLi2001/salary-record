@@ -36,7 +36,7 @@
 
 <script>
 import { ref, reactive, onMounted } from "vue";
-import {sendRequest} from "../../utils/utils";
+import sendRequest from "../../utils/utils/sendRequest.js"
 export default {
   setup(options) {
     onMounted(() => {

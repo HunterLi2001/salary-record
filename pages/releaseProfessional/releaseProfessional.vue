@@ -135,15 +135,18 @@
 		ref,
 		reactive
 	} from 'vue';
-	import {
-		dropdownMenuSelection,
-		checkStrContain,
-		sendRequest
-	} from "../utils/utils.js";
-	import edu_list from "../../static/json/edu_list.json";
-	import indu_list from "../../static/json/indu_list.json";
-	import company_list from "../../static/json/company_list.json";
+	import dropdownMenuSelection from "../utils/utils/dropdownMenuSelection.js";
+	import checkStrContain from "../utils/utils/checkStrContain.js"
+	import sendRequest from "../utils/utils/sendRequest.js"
+	
+	import edu_list from "./json/edu_list.json";
+	import indu_list from "./json/indu_list.json";
+	import company_list from "./json/company_list.json";
+	import cityList from "./json/cityList.json";
+	import typeList from "./json/typeList.json";
+	
 	import router from "../utils/route.js";
+	
 	export default {
 		setup() {
 			//切换tab
@@ -189,23 +192,7 @@
 			const job = ref('')
 			//城市
 			const city = ref('')
-			const city_list = reactive([{
-					id: 1,
-					label: "上海"
-				},
-				{
-					id: 2,
-					label: "北京"
-				},
-				{
-					id: 3,
-					label: "重庆"
-				},
-				{
-					id: 4,
-					label: "成都"
-				},
-			])
+			const city_list = reactive(cityList)
 
 			function selectHotCity(cityId) {
 				for (let key in city_list) {
@@ -225,19 +212,7 @@
 			//薪资
 			const salary = ref('')
 			//类型
-			const type_list = [{
-					id: 1,
-					label: "校招"
-				},
-				{
-					id: 2,
-					label: "实习"
-				},
-				{
-					id: 3,
-					label: "社招"
-				}
-			]
+			const type_list = typeList;
 			const selType = ref(1);
 			const changeSelType = (data) => {
 				selType.value = data
@@ -288,7 +263,7 @@
 					content: "你确定要提交吗？",
 					success(res) {
 						if (res.confirm) {
-							let obj = {
+							let sendInformation = {
 								company: company.value,
 								post: job.value,
 								city: city.value,
@@ -298,9 +273,9 @@
 								profession: sel_industry.value,
 								explain: job_note.value
 							}
-							console.log(obj);
-							sendRequest("http://203.56.169.102:8084", obj.type === 0 ? emergingPublish :
-								ordinaryPublish, "post", obj, "提交成功！", "提交失败！");
+							console.log(sendInformation);
+							sendRequest("http://203.56.169.102:8084", sendInformation.type === 0 ? emergingPublish :
+								ordinaryPublish, "post", sendInformation, "提交成功！", "提交失败！");
 						} else if (res.cancel) {
 							return;
 						}

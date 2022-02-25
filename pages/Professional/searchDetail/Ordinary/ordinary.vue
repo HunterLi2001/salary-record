@@ -86,10 +86,15 @@
 		onMounted
 	} from 'vue'
 	import searchItem from "../../common/searchItem.vue"
+	
 	import pop_list from "../../../../static/json/pop_list.json";
-	import {
-		sendRequest
-	} from "../../../utils/utils.js"
+	import city_pop_list from "./json/city_pop_list.json";
+	
+	import type_list from "./json/type_list.json";
+	import city_list from "./json/city_list.json";
+	import job_list from "./json/job_list.json";
+		
+	import sendRequest from "../../../utils/utils/sendRequest.js"
 	import router from "../../../utils/route.js";
 	export default {
 		components: {
@@ -155,60 +160,9 @@
 				jobList.data[jobId - 1].active = "active";
 			}
 
-			const typeList = reactive({
-				data: [{
-						id: 1,
-						name: "实习",
-						active: ""
-					},
-					{
-						id: 2,
-						name: "校招",
-						active: ""
-					},
-					{
-						id: 3,
-						name: "社招",
-						active: ""
-					}
-				]
-			})
-			const cityList = reactive({
-				data: [{
-						id: 1,
-						name: "重庆",
-						active: ""
-					},
-					{
-						id: 2,
-						name: "北京",
-						active: ""
-					},
-					{
-						id: 3,
-						name: "上海",
-						active: ""
-					}
-				]
-			})
-			const jobList = reactive({
-				data: [{
-						id: 1,
-						name: "金融",
-						active: ""
-					},
-					{
-						id: 2,
-						name: "IT",
-						active: ""
-					},
-					{
-						id: 3,
-						name: "教育",
-						active: ""
-					}
-				]
-			})
+			const typeList = reactive(type_list);
+			const cityList = reactive(city_list);
+			const jobList = reactive(job_list);
 			//搜索操作
 			function search() {
 				if (sendInformation.information === "") return;
@@ -274,7 +228,7 @@
 				console.log(popup)
 				popup.value.open('bottom')
 			}
-			const popList = pop_list;
+			const popList = city_pop_list;
 			return {
 				sendInformation,
 				popList,

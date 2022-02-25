@@ -63,7 +63,11 @@
 		ref,
 		reactive,
 		toRaw
-	} from 'vue'
+	} from 'vue';
+	
+	import ordinary_list from "./json/ordinary_list.json";
+	import emerging_list from "./json/emerging_list.json";
+	
 	export default {
 		setup(options) {
 			//tab 切换
@@ -100,64 +104,8 @@
 				}
 			}
 			const moreList = reactive({});
-			const ordinaryList = reactive({
-				data: [{
-						id: 1,
-						name: "腾讯"
-					},
-					{
-						id: 2,
-						name: "百度"
-					},
-					{
-						id: 3,
-						name: "美团"
-					},
-					{
-						id: 4,
-						name: "华为"
-					},
-					{
-						id: 5,
-						name: "字节跳动"
-					},
-					{
-						id: 6,
-						name: "阿里巴巴"
-					},
-					{
-						id: 7,
-						name: "科大讯飞",
-					}
-				]
-			})
-			const emergingList = reactive({
-				data: [{
-						id: 1,
-						name: "抖音"
-					},
-					{
-						id: 2,
-						name: "快手"
-					},
-					{
-						id: 3,
-						name: "美团"
-					},
-					{
-						id: 4,
-						name: "B站"
-					},
-					{
-						id: 5,
-						name: "滴滴"
-					},
-					{
-						id: 6,
-						name: "饿了么"
-					},
-				]
-			})
+			const ordinaryList = reactive(ordinary_list);
+			const emergingList = reactive(emerging_list);
 
 			function loadingList() {
 				moreList.value = tabStatus.value === 1 ? toRaw(ordinaryList.data) : toRaw(emergingList.data);

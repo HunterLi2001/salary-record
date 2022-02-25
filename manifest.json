@@ -55,7 +55,37 @@
 			"urlCheck": false,
 			"checkSiteMap": false
 		},
-		"usingComponents": true
+		"usingComponents": true,
+		"devServer": {
+			"https": false,
+			"disableHostCheck": true,
+			"proxy": {
+				"/api": {
+					"target": "http://203.56.169.102:8084",
+					"changeOrigin": true,
+					"secure": false,
+					"pathRewrite": {
+						"^/api": ""
+					}
+				}
+			}
+		}
+	},
+	"h5":{
+		"usingComponents":true,
+		"devServer": {
+			"https": false,
+			"proxy": {
+				"/api": {
+					"target": "http://203.56.169.102:8084",
+					"changeOrigin": true,
+					"secure": false,
+					"pathRewrite": {
+						"^/api": "/"
+					}
+				}
+			}
+		}
 	},
 	"mp-alipay": {
 		"usingComponents": true

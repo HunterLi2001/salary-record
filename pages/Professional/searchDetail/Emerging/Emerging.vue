@@ -88,10 +88,14 @@
 		onMounted
 	} from "vue";
 	import searchItem from "../../common/searchItem.vue";
+
 	import pop_list from "../../../../static/json/pop_list.json";
-	import {
-		sendRequest
-	} from "../../../utils/utils.js";
+	import city_pop_list from "./json/city_pop_list.json";
+	
+	import city_list from "./json/city_list.json";
+	import salary_list from "./json/salary_list.json";
+
+	import sendRequest from "../../../utils/utils/sendRequest.js";
 	import router from "../../../utils/route.js";
 
 	export default {
@@ -162,42 +166,8 @@
 				}
 			}
 
-			const cityList = reactive({
-				data: [{
-						id: 1,
-						name: "重庆",
-						active: ""
-					},
-					{
-						id: 2,
-						name: "北京",
-						active: ""
-					},
-					{
-						id: 3,
-						name: "上海",
-						active: ""
-					}
-				]
-			});
-			const salaryList = reactive({
-				data: [{
-						id: 1,
-						name: "3k-5k",
-						active: ""
-					},
-					{
-						id: 2,
-						name: "5k-10k",
-						active: ""
-					},
-					{
-						id: 3,
-						name: "10k-20k",
-						active: ""
-					}
-				]
-			});
+			const cityList = reactive(city_list);
+			const salaryList = reactive(salary_list);
 
 			function search() {
 				if (sendInformation.information === "") return;
@@ -309,43 +279,43 @@
 		background-color: #00bf57;
 		width: 100%;
 		min-height: 100vh;
-		padding: 20 rpx;
+		padding: 20rpx;
 
 		.header {
 			width: 100%;
-			height: 250 rpx;
+			height: 250rpx;
 			color: #fff;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 
 			.header_logo {
-				margin-top: 25 rpx;
-				font-size: 60 rpx;
+				margin-top: 25rpx;
+				font-size: 60rpx;
 			}
 
 			.header_list {
-				margin-top: 25 rpx;
-				font-size: 24 rpx;
+				margin-top: 25rpx;
+				font-size: 24rpx;
 				display: flex;
 				flex-direction: row;
 				align-items: center;
 
 				.header_tab {
-					margin: 0 40 rpx;
+					margin: 0 40rpx;
 					box-sizing: border-box;
-					padding: 20 rpx 0;
+					padding: 20rpx 0;
 				}
 
 				.header_tab_line {
-					border-bottom: 4 rpx solid #fff;
+					border-bottom: 4rpx solid #fff;
 					border-radius: 5%;
 				}
 			}
 		}
 
 		.content_search {
-			border-radius: 8 rpx;
+			border-radius: 8rpx;
 			overflow: hidden;
 			margin-bottom: 10px;
 		}
@@ -353,9 +323,9 @@
 		.content_more {
 			box-sizing: border-box;
 			width: 100%;
-			padding: 20 rpx;
+			padding: 20rpx;
 			// height: 400rpx;
-			border-radius: 10 rpx;
+			border-radius: 10rpx;
 			box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
 			background-color: #fff;
 			margin-bottom: 10px;
@@ -365,12 +335,12 @@
 				flex-direction: column;
 				justify-content: space-between;
 				align-items: flex-start;
-				margin-top: 15 rpx;
+				margin-top: 15rpx;
 				overflow: scroll;
 
 				.label {
-					margin-left: 15 rpx;
-					font-size: 24 rpx;
+					margin-left: 15rpx;
+					font-size: 24rpx;
 					color: gray;
 				}
 
@@ -379,7 +349,7 @@
 					align-items: center;
 
 					.input {
-						width: 300 rpx;
+						width: 300rpx;
 					}
 				}
 
@@ -389,31 +359,31 @@
 					overflow-x: scroll;
 
 					.sel_list {
-						margin-top: 10 rpx;
+						margin-top: 10rpx;
 						display: flex;
 						flex-direction: row;
 						align-items: center;
 
 						.sel_item {
 							flex-shrink: 0;
-							width: 100 rpx;
+							width: 100rpx;
 							text-align: center;
-							padding: 10 rpx;
-							border: 1 rpx solid #00bf57;
+							padding: 10rpx;
+							border: 1rpx solid #00bf57;
 							color: #00bf57;
-							border-radius: 20 rpx;
-							margin-right: 10 rpx;
+							border-radius: 20rpx;
+							margin-right: 10rpx;
 						}
 
 						.sel_item_salary {
 							flex-shrink: 0;
-							width: 150 rpx;
+							width: 150rpx;
 							text-align: center;
-							padding: 10 rpx;
-							border: 1 rpx solid #00bf57;
+							padding: 10rpx;
+							border: 1rpx solid #00bf57;
 							color: #00bf57;
-							border-radius: 20 rpx;
-							margin-right: 10 rpx;
+							border-radius: 20rpx;
+							margin-right: 10rpx;
 						}
 
 						.active {
@@ -429,7 +399,7 @@
 			}
 
 			.more_line {
-				margin-top: 20 rpx;
+				margin-top: 20rpx;
 				border: 1px solid rgba(0, 0, 0, 0.06);
 				border-radius: 10%;
 			}
@@ -440,30 +410,30 @@
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
-					margin-bottom: 40 rpx;
+					margin-bottom: 40rpx;
 
 					.sel_item {
-						padding: 10 rpx 0;
-						margin: 0 20 rpx;
-						font-size: 28 rpx;
+						padding: 10rpx 0;
+						margin: 0 20rpx;
+						font-size: 28rpx;
 						color: gray;
 					}
 
 					.seled_item {
 						color: #00bf57;
-						border-bottom: 2 rpx solid #00bf57;
+						border-bottom: 2rpx solid #00bf57;
 					}
 				}
 
 				.searchItem {
-					margin: 20 rpx 0;
+					margin: 20rpx 0;
 				}
 			}
 
 		}
 
 		.pop_list {
-			height: 800 rpx;
+			height: 800rpx;
 		}
 	}
 </style>
@@ -477,7 +447,7 @@
 
 		.uni-indexed-list.data-v-0f58ddf9 {
 			top: auto;
-			height: 400 rpx;
+			height: 400rpx;
 		}
 	}
 </style>
