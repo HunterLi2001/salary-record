@@ -167,12 +167,13 @@
 			function search() {
 				if (sendInformation.information === "") return;
 				console.log("searching!", toRaw(sendInformation));
-				sendPostRequest(router.ordinaryGetActicleList, toRaw(sendInformation),
-					function(data) {
-						console.log(data);
-						operateData(data);
+				sendPostRequest("/api" + router.ordinaryGetActicleList, toRaw(sendInformation), {
+						success(data) {
+							console.log(data);
+							operateData(data);
+						},
+						fail() {}
 					},
-					function(error) {},
 					true)
 			}
 

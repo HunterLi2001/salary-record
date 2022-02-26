@@ -266,23 +266,24 @@
 							let sendInformation = {
 								company: company.value,
 								post: job.value,
-								city: city.value,
-								salary: salary.value,
+								city: city.value,//对后端输入有疑问：当自定义输入城市时如何转换为int?
+								salary: parseInt(salary.value),
 								type: tabStatus.value === 1 ? selType.value : 0, //0为选择新兴职业时的类型代码
 								degree: sel_education.value,
 								profession: sel_industry.value,
 								explain: job_note.value
 							}
 							console.log(sendInformation);
-							sendPostRequest(sendInformation.type === 0 ? emergingPublish :
-								ordinaryPublish, sendInformation,
-								function() {
-									uni.showModal({
-										content: "提交成功！",
-										showCancel: false
-									})
+							sendPostRequest(sendInformation.type === 0 ? route.emergingPublish :
+								route.ordinaryPublish, sendInformation, {
+									success() {
+										uni.showModal({
+											content: "提交成功！",
+											showCancel: false
+										})
+									},
+									fail() {}
 								},
-								function() {},
 								true);
 						} else if (res.cancel) {
 							return;

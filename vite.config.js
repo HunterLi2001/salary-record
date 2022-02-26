@@ -1,7 +1,5 @@
-import {
-	defineConfig
-} from "vite";
-import uni from "@dcloudio/vite-plugin-uni";
+import { defineConfig } from 'vite'
+import uni from '@dcloudio/vite-plugin-uni'
 
 export default defineConfig({
 	plugins: [
@@ -10,13 +8,10 @@ export default defineConfig({
 	server: {
 		port: 3000,
 		proxy: {
-			"/api": {
-				
-				target: "http://203.56.169.102:8084",
+			'/api': {
+				target: 'http://203.56.169.102:8084', // 目标服务  
 				changeOrigin: true,
-				reWrite: (path) => {
-					path.replace(/^\/api/, "");
-				}
+				rewrite: path => path.replace(/^\/api/, ''),
 			}
 		}
 	}

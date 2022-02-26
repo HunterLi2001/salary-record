@@ -172,12 +172,13 @@
 			function search() {
 				if (sendInformation.information === "") return;
 				console.log("searching!", toRaw(sendInformation));
-				sendPostRequest(router.emergingGetActicleList, toRaw(sendInformation),
-					function(data) {
-						console.log(data);
-						operateData(data);
+				sendPostRequest(router.emergingGetActicleList, toRaw(sendInformation), {
+						success(data) {
+							console.log(data);
+							operateData(data);
+						},
+						fail(error) {}
 					},
-					function(error) {},
 					true);
 			}
 

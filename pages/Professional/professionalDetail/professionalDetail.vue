@@ -55,14 +55,14 @@
 					type.value === 1 ?
 					"/showDetail/getNormalWork" :
 					"/showDetail/getNewWork",
-					id.value,
-					function() {
-						console.log(data);
-						operateData(data);
-					},
-					function() {},
-					true
-				);
+					id.value, {
+						success(data) {
+							console.log(data);
+							operateData(data);
+						},
+						fail() {}
+					}
+					true);
 			}
 
 			function operateData(data) {
