@@ -86,15 +86,15 @@
 		onMounted
 	} from 'vue'
 	import searchItem from "../../common/searchItem.vue"
-	
+
 	import pop_list from "../../../../static/json/pop_list.json";
 	import city_pop_list from "./json/city_pop_list.json";
-	
+
 	import type_list from "./json/type_list.json";
 	import city_list from "./json/city_list.json";
 	import job_list from "./json/job_list.json";
-		
-	import sendRequest from "../../../utils/utils/sendRequest.js"
+
+	import sendPostRequest from "../../../utils/utils/sendPostRequest.js"
 	import router from "../../../utils/route.js";
 	export default {
 		components: {
@@ -167,17 +167,13 @@
 			function search() {
 				if (sendInformation.information === "") return;
 				console.log("searching!", toRaw(sendInformation));
-				sendRequest("http://203.56.169.102:8084", router.ordinaryGetActicleList, "post", toRaw(sendInformation),
+				sendPostRequest(router.ordinaryGetActicleList, toRaw(sendInformation),
 					function(data) {
 						console.log(data);
 						operateData(data);
 					},
-					function(error) {
-						uni.showModal({
-							content: "搜索失败!错误代码为:" + error.errMsg,
-							showCancel: false,
-						})
-					})
+					function(error) {},
+					true)
 			}
 
 			function operateData(data) {

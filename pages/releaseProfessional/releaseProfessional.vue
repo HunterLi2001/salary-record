@@ -137,16 +137,16 @@
 	} from 'vue';
 	import dropdownMenuSelection from "../utils/utils/dropdownMenuSelection.js";
 	import checkStrContain from "../utils/utils/checkStrContain.js"
-	import sendRequest from "../utils/utils/sendRequest.js"
-	
+	import sendPostRequest from "../utils/utils/sendPostRequest.js"
+
 	import edu_list from "./json/edu_list.json";
 	import indu_list from "./json/indu_list.json";
 	import company_list from "./json/company_list.json";
 	import cityList from "./json/cityList.json";
 	import typeList from "./json/typeList.json";
-	
+
 	import router from "../utils/route.js";
-	
+
 	export default {
 		setup() {
 			//切换tab
@@ -274,8 +274,16 @@
 								explain: job_note.value
 							}
 							console.log(sendInformation);
-							sendRequest("http://203.56.169.102:8084", sendInformation.type === 0 ? emergingPublish :
-								ordinaryPublish, "post", sendInformation, "提交成功！", "提交失败！");
+							sendPostRequest(sendInformation.type === 0 ? emergingPublish :
+								ordinaryPublish, sendInformation,
+								function() {
+									uni.showModal({
+										content: "提交成功！",
+										showCancel: false
+									})
+								},
+								function() {},
+								true);
 						} else if (res.cancel) {
 							return;
 						}
