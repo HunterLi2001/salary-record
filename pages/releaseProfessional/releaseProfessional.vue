@@ -14,6 +14,7 @@
 				<uni-collapse>
 					<uni-collapse-item title-border="none" :border="false" :show-arrow="false" :open="showCollapse">
 						<template v-slot:title>
+							<!-- TODO 使用uni-easyinput时在微信端无法调用keyup和keydown事件响应函数。 -->
 							<uni-easyinput v-model="company" placeholder="输入公司名称" @blur="closeCollapse"
 								@focus="openCollapse" @keyup="quickShowInputCompany(company.trim(),companyList,3)">
 							</uni-easyinput>

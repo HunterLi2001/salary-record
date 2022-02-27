@@ -42,13 +42,17 @@
 	} from "vue";
 	import sendPostRequest from "../../utils/utils/sendPostRequest.js"
 	export default {
-		setup(options) {
+		props:{
+			type:String,
+			id:String
+		},
+		setup(props) {
 			onMounted(() => {
 				search();
 			});
-			console.log(options);
-			const type = reactive(options.type);
-			const id = ref(options.id);
+			console.log(props);
+			const type = reactive(props.type);
+			const id = ref(props.id);
 
 			function search() {
 				sendPostRequest(
@@ -61,7 +65,7 @@
 							operateData(data);
 						},
 						fail() {}
-					}
+					},
 					true);
 			}
 

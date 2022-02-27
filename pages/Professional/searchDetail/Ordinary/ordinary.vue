@@ -14,6 +14,7 @@
 					<view class="sel_list">
 						<view class="sel_item" :class="item.active" v-for="item in typeList.data" :key="item.id"
 							@click="chooseType(item.id)">{{item.name}}</view>
+							<!-- TODO 更多内容没有做 -->
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -24,6 +25,7 @@
 					<view class="sel_list">
 						<view class="sel_item" :class="item.active" v-for="item in cityList.data" :key="item.id"
 							@click="chooseCity(item.id)">{{item.name}}</view>
+							<!-- TODO 更多内容没有做 -->
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -34,6 +36,7 @@
 					<view class="sel_list">
 						<view class="sel_item" :class="item.active" v-for="item in jobList.data" :key="item.id"
 							@click="chooseJob(item.id)">{{item.name}}</view>
+							<!-- TODO 更多内容没有做 -->
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -100,7 +103,10 @@
 		components: {
 			searchItem
 		},
-		setup(options) {
+		props:{
+			inputValue:String
+		},
+		setup(props) {
 			onMounted(() => {
 				search();
 			})
@@ -111,7 +117,7 @@
 			}
 			//发送信息对象
 			const sendInformation = reactive({
-				information: options.inputValue,
+				information: props.inputValue,
 				city: 0,
 				type: "",
 				profession: "",
@@ -167,7 +173,7 @@
 			function search() {
 				if (sendInformation.information === "") return;
 				console.log("searching!", toRaw(sendInformation));
-				sendPostRequest("/api" + router.ordinaryGetActicleList, toRaw(sendInformation), {
+				sendPostRequest(router.ordinaryGetActicleList, toRaw(sendInformation), {
 						success(data) {
 							console.log(data);
 							operateData(data);
@@ -207,7 +213,7 @@
 						break;
 				}
 			}
-
+			// TODO 由于拿不到数据，没有设计排序算法
 			function switchInTime() {
 				console.log("switchInTime")
 			}

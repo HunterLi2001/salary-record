@@ -69,10 +69,13 @@
 	import emerging_list from "./json/emerging_list.json";
 	
 	export default {
-		setup(options) {
+		props:{
+			target:String
+		},
+		setup(props) {
 			//tab 切换
-			console.log(options, options.target)
-			const tabStatus = ref(parseInt(options.target))
+			console.log(props, props.target)
+			const tabStatus = ref(parseInt(props.target))
 			const changeTab = (target) => {
 				tabStatus.value = target;
 				loadingList();

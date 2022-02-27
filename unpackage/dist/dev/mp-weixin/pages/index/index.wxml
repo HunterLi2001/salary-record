@@ -1,1 +1,0 @@
-<view class="indexPage"><view class="header"><view class="headLogo">SALARY SHOW</view><view class="headselect"><view bindtap="{{a}}">薪资查询</view><view bindtap="{{b}}">普通职业</view><view bindtap="{{c}}">新兴职业</view></view></view><view class="content"></view><view class="footer"></view></view>

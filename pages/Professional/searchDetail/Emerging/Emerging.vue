@@ -16,6 +16,7 @@
 						<view class="sel_item" :class="item.active" v-for="item in cityList.data" :key="item.id"
 							@click="chooseCity(item.id)">{{ item.name }}
 						</view>
+						<!-- TODO 更多内容没有做 -->
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -23,6 +24,7 @@
 			<view class="more_list">
 				<view class="label">收入区间</view>
 				<view class="input_salary">
+					<!-- TODO 使用uni-easyinput时在微信端无法调用keyup和keydown事件响应函数。 -->
 					<uni-easyinput class="input" v-model="sendInformation.dSalary" placeholder="请输入最低工资"
 						@keydown="clearActive"></uni-easyinput>
 					<view>~</view>
@@ -102,7 +104,10 @@
 		components: {
 			searchItem
 		},
-		setup(options) {
+		props:{
+			inputValue:String
+		},
+		setup(props) {
 			onMounted(() => {
 				search();
 			});
@@ -113,7 +118,7 @@
 			};
 
 			const sendInformation = reactive({
-				information: options.inputValue,
+				information: props.inputValue,
 				city: 0,
 				dSalary: 0,
 				hSalary: 0,
@@ -212,7 +217,7 @@
 						break;
 				}
 			}
-
+			// TODO 由于拿不到数据，没有设计排序算法
 			function switchInTime() {
 				console.log("switchInTime");
 			}
