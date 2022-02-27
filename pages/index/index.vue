@@ -18,11 +18,7 @@
 			</view>
 		</view>
 		<view class="content">
-			<view class="item">五险一金查询方式</view>
-			<view class="item">五险一金的使用</view>
-			<view class="item">各城市五险一金缴纳比例</view>
-			<view class="item">个人所得税相关政策</view>
-			<view class="item">减免税申报条件</view>
+			<view class="item" v-for="item in content">{{item}}</view>
 		</view>
 		<ad></ad>
 		<view class="footer">
@@ -37,8 +33,9 @@
 
 <script>
 	import {
-		ref
-	} from 'vue'
+		ref,reactive
+	} from 'vue';
+	import item from "./json/item.json";
 	export default {
 		onShareAppMessage(res) {
 			if (res.from === 'button') { // 来自页面内分享按钮
@@ -50,6 +47,7 @@
 			}
 		},
 		setup() {
+			const content = reactive(item);
 			const enterProfessional = (target) => {
 				uni.navigateTo({
 					url: `../Professional/Professional/Professional?target=${target}`
@@ -63,6 +61,7 @@
 			}
 
 			return {
+				content,
 				enterProfessional,
 				enter
 			}

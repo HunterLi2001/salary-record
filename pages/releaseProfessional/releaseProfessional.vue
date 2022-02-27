@@ -109,7 +109,7 @@
 
 		<view class="bottom_tabelbar">
 			<navigator class="tabelbar_item active" url="./releaseProfessional">发布信息</navigator>
-			<navigator class="tabelbar_item" url="#">薪资查询</navigator>
+			<navigator class="tabelbar_item" url="../index/index">薪资查询</navigator>
 		</view>
 
 		<!-- TODO ui需要进行优化 -->

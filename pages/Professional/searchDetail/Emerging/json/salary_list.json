@@ -1,17 +1,17 @@
 {
 	"data": [{
 			"id": 1,
-			"name": "3k-5k",
+			"name": "0-10k",
 			"active": ""
 		},
 		{
 			"id": 2,
-			"name": "5k-10k",
+			"name": "10k-50k",
 			"active": ""
 		},
 		{
 			"id": 3,
-			"name": "10k-20k",
+			"name": "50k以上",
 			"active": ""
 		}
 	]

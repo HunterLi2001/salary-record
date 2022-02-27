@@ -30,10 +30,12 @@
 					<view>~</view>
 					<uni-easyinput class="input" v-model="sendInformation.hSalary" placeholder="请输入最高工资"
 						@keydown="clearActive"></uni-easyinput>
+					<view v-if="!yearOrMonthSalary" @click="changeYearOrMonthSalary" class="year-month">月薪</view>
+					<view v-if="yearOrMonthSalary" @click="changeYearOrMonthSalary" class="year-month">年薪</view>
 				</view>
 			</view>
 			<view class="more_list">
-				<view class="label">常见区间</view>
+				<view class="label">常见区间（月薪）</view>
 				<view class="list_scroll">
 					<view class="sel_list">
 						<view class="sel_item_salary" :class="item.active" v-for="item in salaryList.data"
@@ -52,6 +54,13 @@
 				<view v-for="item in detail" :key="item.id" class="searchItem">
 					<searchItem :detail="item" :type="2"></searchItem>
 				</view>
+			</view>
+		</view>
+		<view class="footer">
+			<view class="bottom_tabelbar">
+				<navigator class="tabelbar_item" url="../Ordinary/ordinary">普通职业
+				</navigator>
+				<navigator class="tabelbar_item active" url="../Emerging/Emerging">新兴职业</navigator>
 			</view>
 		</view>
 		<!-- <view>
@@ -104,8 +113,8 @@
 		components: {
 			searchItem
 		},
-		props:{
-			inputValue:String
+		props: {
+			inputValue: String
 		},
 		setup(props) {
 			onMounted(() => {
@@ -120,8 +129,8 @@
 			const sendInformation = reactive({
 				information: props.inputValue,
 				city: 0,
-				dSalary: 0,
-				hSalary: 0,
+				dSalary: null,
+				hSalary: null,
 				order: tabStatus.value,
 				currentPage: 0,
 				pageSize: 0
@@ -150,23 +159,39 @@
 				sendInformation.city = cityId;
 			}
 
+			const yearOrMonthSalary = ref(false); //year为true，month为false
+
+			function changeYearOrMonthSalary() {
+				if (yearOrMonthSalary.value) {
+					sendInformation.dSalary = sendInformation.dSalary === null ? null : Math.floor(sendInformation
+						.dSalary / 12);
+					sendInformation.hSalary = sendInformation.hSalary === null ? null : Math.floor(sendInformation
+						.hSalary / 12);
+				} else {
+					sendInformation.dSalary = sendInformation.dSalary === null ? null : sendInformation.dSalary * 12;
+					sendInformation.hSalary = sendInformation.hSalary === null ? null : sendInformation.hSalary * 12;
+				}
+				yearOrMonthSalary.value = !yearOrMonthSalary.value;
+			}
+
 			function chooseSalary(salaryId) {
+				yearOrMonthSalary.value = false;
 				for (let i = 0; i < salaryList.data.length; i++) {
 					salaryList.data[i].active = "";
 				}
 				salaryList.data[salaryId - 1].active = "active";
 				switch (salaryId) {
 					case 1:
-						sendInformation.dSalary = 3000;
-						sendInformation.hSalary = 5000;
-						break;
-					case 2:
-						sendInformation.dSalary = 5000;
+						sendInformation.dSalary = 0;
 						sendInformation.hSalary = 10000;
 						break;
-					case 3:
+					case 2:
 						sendInformation.dSalary = 10000;
-						sendInformation.hSalary = 20000;
+						sendInformation.hSalary = 50000;
+						break;
+					case 3:
+						sendInformation.dSalary = 50000;
+						sendInformation.hSalary = null;
 						break;
 				}
 			}
@@ -175,7 +200,14 @@
 			const salaryList = reactive(salary_list);
 
 			function search() {
-				if (sendInformation.information === "") return;
+				if (sendInformation.information === "" || !sendInformation.information) return;
+				if (!checkSalary()) {
+					uni.showModal({
+						content: "输入不正确！请重新输入!",
+						showCancel: false
+					})
+					return;
+				}
 				console.log("searching!", toRaw(sendInformation));
 				sendPostRequest(router.emergingGetActicleList, toRaw(sendInformation), {
 						success(data) {
@@ -187,6 +219,15 @@
 					true);
 			}
 
+			function checkSalary() {
+				const testReg = /^(0|[1-9][0-9]*)$/;
+				if (sendInformation.dSalary === null || sendInformation.hSalary === null) return true;
+				if (testReg.test(sendInformation.dSalary) && testReg.test(sendInformation.hSalary)) {
+					return sendInformation.dSalary < sendInformation.hSalary;
+				}
+				return false;
+			}
+
 			function operateData(data) {
 				sendInformation.currentPage = data.data.currentPage;
 				sendInformation.pageSize = data.data.pageSize;
@@ -194,7 +235,6 @@
 				for (let i = 0; i < data.data.data.length; i++) {
 					detail.push(data.data.data[i]);
 				}
-				switchResult(tabTarget.value);
 			}
 
 			//搜索结果筛选
@@ -203,33 +243,6 @@
 				tabTarget.value = target;
 				switchResult(target);
 			};
-
-			function switchResult(target) {
-				switch (target) {
-					case 1:
-						switchInTime();
-						break;
-					case 2:
-						switchInCredibility();
-						break;
-					case 3:
-						switchInQuantity();
-						break;
-				}
-			}
-			// TODO 由于拿不到数据，没有设计排序算法
-			function switchInTime() {
-				console.log("switchInTime");
-			}
-
-			function switchInCredibility() {
-				console.log("switchInCredibility");
-			}
-
-			function switchInQuantity() {
-				console.log("switchInQuantity");
-			}
-
 			const detail = reactive([]);
 			const popup = ref(null);
 			const open = () => {
@@ -266,10 +279,9 @@
 				chooseSalary,
 				clearActive,
 				operateData,
-				switchResult,
-				switchInTime,
-				switchInCredibility,
-				switchInQuantity
+				checkSalary,
+				yearOrMonthSalary,
+				changeYearOrMonthSalary
 			};
 		}
 	};
@@ -351,7 +363,17 @@
 					align-items: center;
 
 					.input {
-						width: 300rpx;
+						width: 250rpx;
+					}
+					.year-month{
+						width: 100rpx;
+						height: 60rpx;
+						line-height: 60rpx;
+						border: 1rpx solid #00bf57;
+						border-radius: 20rpx;
+						color: #00bf57;
+						text-align: center;
+						margin-left: 20rpx;
 					}
 				}
 
@@ -436,6 +458,27 @@
 
 		.pop_list {
 			height: 800rpx;
+		}
+
+		.bottom_tabelbar {
+			width: 100%;
+			position: fixed;
+			bottom: 0;
+			margin-left: -20rpx;
+
+			.tabelbar_item {
+				background-color: #eeeeee;
+				display: inline-block;
+				width: 50%;
+				height: 100rpx;
+				line-height: 100rpx;
+				text-align: center;
+				font-family: "黑体";
+			}
+
+			.active {
+				color: red;
+			}
 		}
 	}
 </style>

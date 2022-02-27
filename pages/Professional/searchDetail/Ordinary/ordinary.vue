@@ -8,13 +8,15 @@
 				prefixIcon="search"></uni-easyinput>
 		</view>
 		<view class="content_more">
+			<!-- TODO 可以封装成一个组件，但是有点麻烦 -->
+			<!-- <ChooseList label="类型" :typeList="typeList" :todo="chooseType()" :more="open()"/> -->
 			<view class="more_list">
 				<view class="label">类型</view>
 				<view class="list_scroll">
 					<view class="sel_list">
 						<view class="sel_item" :class="item.active" v-for="item in typeList.data" :key="item.id"
 							@click="chooseType(item.id)">{{item.name}}</view>
-							<!-- TODO 更多内容没有做 -->
+						<!-- TODO 更多内容没有做 -->
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -25,7 +27,7 @@
 					<view class="sel_list">
 						<view class="sel_item" :class="item.active" v-for="item in cityList.data" :key="item.id"
 							@click="chooseCity(item.id)">{{item.name}}</view>
-							<!-- TODO 更多内容没有做 -->
+						<!-- TODO 更多内容没有做 -->
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -36,7 +38,7 @@
 					<view class="sel_list">
 						<view class="sel_item" :class="item.active" v-for="item in jobList.data" :key="item.id"
 							@click="chooseJob(item.id)">{{item.name}}</view>
-							<!-- TODO 更多内容没有做 -->
+						<!-- TODO 更多内容没有做 -->
 						<view class="sel_item" @click="open">更多</view>
 					</view>
 				</view>
@@ -53,12 +55,21 @@
 				</view>
 			</view>
 		</view>
+		<view class="footer">
+			<view class="bottom_tabelbar">
+				<navigator class="tabelbar_item active" url="../Ordinary/ordinary">普通职业
+				</navigator>
+				<navigator class="tabelbar_item" url="../Emerging/Emerging">新兴职业</navigator>
+			</view>
+		</view>
 		<!-- <view>
 			<uni-indexed-list :options="popList" :showSelect="true"/>
 		</view> -->
+		<!-- 更多 -->
 		<uni-popup ref="popup" type="bottom" background-color="#fff">
 			<view class="pop_list">
 				<view>
+					<!--  -->
 					<uni-collapse>
 						<uni-collapse-item title-border="none" :border="false" :show-arrow="false" :open="showCollapse">
 							<template v-slot:title>
@@ -72,6 +83,9 @@
 							</view>
 						</uni-collapse-item>
 					</uni-collapse>
+				</view>
+				<view class="selected-area">
+					<view class="selected-item" v-for="item in selectedItem">{{item}}</view>
 				</view>
 				<view style="height: 400rpx;">
 					<uni-indexed-list :options="popList" :showSelect="true" />
@@ -89,6 +103,7 @@
 		onMounted
 	} from 'vue'
 	import searchItem from "../../common/searchItem.vue"
+	// import ChooseList from "../../common/ChooseList.vue";
 
 	import pop_list from "../../../../static/json/pop_list.json";
 	import city_pop_list from "./json/city_pop_list.json";
@@ -101,10 +116,11 @@
 	import router from "../../../utils/route.js";
 	export default {
 		components: {
-			searchItem
+			searchItem,
+			// ChooseList
 		},
-		props:{
-			inputValue:String
+		props: {
+			inputValue: String
 		},
 		setup(props) {
 			onMounted(() => {
@@ -171,7 +187,7 @@
 			const jobList = reactive(job_list);
 			//搜索操作
 			function search() {
-				if (sendInformation.information === "") return;
+				if (sendInformation.information === "" || !sendInformation.information) return;
 				console.log("searching!", toRaw(sendInformation));
 				sendPostRequest(router.ordinaryGetActicleList, toRaw(sendInformation), {
 						success(data) {
@@ -190,40 +206,12 @@
 				for (let i = 0; i < data.data.data.length; i++) {
 					detail.push(data.data.data[i]);
 				}
-				switchResult(tabTarget.value);
 			}
 
 			//搜索结果筛选
 			const tabTarget = ref(1)
 			const changeTabTarget = (target) => {
 				tabTarget.value = target;
-				switchResult(target);
-			}
-
-			function switchResult(target) {
-				switch (target) {
-					case 1:
-						switchInTime();
-						break;
-					case 2:
-						switchInCredibility();
-						break;
-					case 3:
-						switchInQuantity();
-						break;
-				}
-			}
-			// TODO 由于拿不到数据，没有设计排序算法
-			function switchInTime() {
-				console.log("switchInTime")
-			}
-
-			function switchInCredibility() {
-				console.log("switchInCredibility")
-			}
-
-			function switchInQuantity() {
-				console.log("switchInQuantity")
 			}
 			const detail = reactive([]);
 			const popup = ref(null)
@@ -232,6 +220,7 @@
 				popup.value.open('bottom')
 			}
 			const popList = city_pop_list;
+			const selectedItem = reactive([]);
 			return {
 				sendInformation,
 				popList,
@@ -255,10 +244,7 @@
 				changeTabTarget,
 				search,
 				operateData,
-				switchInCredibility,
-				switchInQuantity,
-				switchInTime,
-				switchResult
+				selectedItem
 			}
 		}
 	}
@@ -406,6 +392,47 @@
 		.pop_list {
 			height: 800rpx;
 
+			.content {
+				.text {
+					font-size: 30rpx;
+				}
+			}
+
+			.selected-area {
+				display: flex;
+
+				.selected-item {
+					width: 75rpx;
+					height: 30rpx;
+					font-size: 20rpx;
+					color: #3A3A3A;
+					border: 1rpx solid #3a3a3a;
+					border-radius: 5rpx;
+					text-align: center;
+					line-height: 30rpx;
+				}
+			}
+		}
+
+		.bottom_tabelbar {
+			width: 100%;
+			position: fixed;
+			bottom: 0;
+			margin-left: -20rpx;
+
+			.tabelbar_item {
+				background-color: #eeeeee;
+				display: inline-block;
+				width: 50%;
+				height: 100rpx;
+				line-height: 100rpx;
+				text-align: center;
+				font-family: "黑体";
+			}
+
+			.active {
+				color: red;
+			}
 		}
 	}
 </style>

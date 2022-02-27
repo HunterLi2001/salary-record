@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/releaseProfessional/releaseProfessional",
+    "pages/Professional/Professional/Professional",
+    "pages/Professional/searchDetail/Ordinary/ordinary",
+    "pages/Professional/professionalDetail/professionalDetail",
+    "pages/Professional/searchDetail/Emerging/Emerging"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "usingComponents": {}
+}

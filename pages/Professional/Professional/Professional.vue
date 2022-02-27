@@ -64,13 +64,13 @@
 		reactive,
 		toRaw
 	} from 'vue';
-	
+
 	import ordinary_list from "./json/ordinary_list.json";
 	import emerging_list from "./json/emerging_list.json";
-	
+
 	export default {
-		props:{
-			target:String
+		props: {
+			target: String
 		},
 		setup(props) {
 			//tab 切换
@@ -102,7 +102,7 @@
 				loadingList();
 				for (let key in toRaw(moreList.value)) {
 					if (moreList.value[key].id === list) {
-						inputValue.value = moreList.value[key].name;
+						search(moreList.value[key].name);
 					}
 				}
 			}
@@ -113,11 +113,12 @@
 			function loadingList() {
 				moreList.value = tabStatus.value === 1 ? toRaw(ordinaryList.data) : toRaw(emergingList.data);
 			}
-			const search = () => {
+			const search = (value) => {
+				console.log(value)
 				uni.navigateTo({
 					url: (tabStatus.value === 1 ? "../searchDetail/Ordinary/ordinary" :
 							"../searchDetail/Emerging/Emerging") + "?tabStatus=" + tabStatus.value +
-						"&inputValue=" + inputValue.value
+						"&inputValue=" + (value === "prefix" ? inputValue.value : value)
 				})
 			}
 			return {

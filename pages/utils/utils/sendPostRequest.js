@@ -7,7 +7,7 @@
  */
 function sendPostRequest(route, data, callBackFn, isShowModal) {
 	uni.request({
-		url: "http://203.56.169.102:8084" + route,
+		url: "/api" + route,
 		method: "POST",
 		data,
 		success(data) {
