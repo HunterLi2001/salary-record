@@ -7,7 +7,12 @@
  */
 function sendPostRequest(route, data, callBackFn, isShowModal) {
 	uni.request({
+		// #ifdef H5
 		url: "/api" + route,
+		// #endif
+		// #ifndef H5
+		url: "http://203.56.169.102:8084" + route,
+		// #endif
 		method: "POST",
 		data,
 		success(data) {
